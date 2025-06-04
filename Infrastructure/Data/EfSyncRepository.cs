@@ -1,10 +1,11 @@
 ﻿using Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Application.Interfaces.Data;
 
 namespace Infrastructure.Data
 {
-    public class EfSyncRepository : ISyncRepository
+    public class EfSyncRepository : ISourceRepository
     {
         private readonly AscDbContext _context;
         private readonly ILogger<EfSyncRepository> _logger;
@@ -45,18 +46,5 @@ namespace Infrastructure.Data
                 throw;
             }
         }
-
-        public Task<User?> FindUserInTargetAsync(string identifier)
-        {
-            // This is implemented in the LDAP repository
-            throw new NotImplementedException();
-        }
-
-        public Task UpdateUserInTargetAsync(User user)
-        {
-            // This is implemented in the LDAP repository
-            throw new NotImplementedException();
-        }
     }
-
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wRGIbVNr894=",
+  "dgSpecHash": "dqiL3sJvVXE=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\AscDb-to-AD_Synchonizer\\Infrastructure\\Infrastructure.csproj",
+  "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\core.system.configuration.install\\1.1.0\\core.system.configuration.install.1.1.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.bcl.cryptography\\9.0.5\\microsoft.bcl.cryptography.9.0.5.nupkg.sha512",

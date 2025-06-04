@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "B24078bMhQA=",
+  "dgSpecHash": "5gnEMO9ofLQ=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\AscDb-to-AD_Synchonizer\\Application\\Application.csproj",
+  "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Application.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.extensions.configuration\\9.0.4\\microsoft.extensions.configuration.9.0.4.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\9.0.4\\microsoft.extensions.configuration.abstractions.9.0.4.nupkg.sha512",

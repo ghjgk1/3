@@ -20,10 +20,8 @@ namespace Infrastructure.Directory.Models
 
         public string[] PropertiesToLoad
         {
-            get => _searcher.PropertiesToLoad.Cast<string>().ToArray();
             set => _searcher.PropertiesToLoad.AddRange(value);
         }
-
         public IDirectorySearchResult? FindOne()
         {
             var result = _searcher.FindOne();

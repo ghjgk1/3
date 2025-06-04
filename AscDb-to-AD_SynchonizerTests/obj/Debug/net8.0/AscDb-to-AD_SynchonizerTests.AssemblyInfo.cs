@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("AscDb_to_AD_SynchonizerTests")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b71fc0c440c208c556e49e2dcfd42cf4f580311c")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6bdb6ea8b0a9a71884e06770de6421d82f46f9dc")]
 [assembly: System.Reflection.AssemblyProductAttribute("AscDb_to_AD_SynchonizerTests")]
 [assembly: System.Reflection.AssemblyTitleAttribute("AscDb_to_AD_SynchonizerTests")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

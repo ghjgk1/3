@@ -3,13 +3,16 @@ using Domain;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 using Application.Interfaces;
+using Application.Interfaces.Data;
 using Infrastructure.Directory.Models;
 using System.DirectoryServices.AccountManagement;
+using System.Linq;
+using System.Reflection;
 
 [assembly: InternalsVisibleTo("AscDb_to_AD_SynchonizerTests")]
 namespace Infrastructure.Directory
 {
-    public class LdapSyncRepository : ISyncRepository
+    public class LdapSyncRepository : ITargetRepository
     {
         private readonly ILogger<LdapSyncRepository> _logger;
         private readonly Dictionary<string, string> _fieldMappings;
@@ -44,7 +47,7 @@ namespace Infrastructure.Directory
             _logger = logger;
         }
 
-        public async Task<User?> FindUserInTargetAsync(string identifier)
+        public User? FindUserInTarget(string identifier)
         {
             try
             {
@@ -66,7 +69,7 @@ namespace Infrastructure.Directory
             }
         }
 
-        public async Task UpdateUserInTargetAsync(User user)
+        public void UpdateUserInTarget(User user)
         {
             try
             {
@@ -125,36 +128,44 @@ namespace Infrastructure.Directory
         internal User MapToUser(IPropertyCollection properties)
         {
             var user = new User();
+
             foreach (var mapping in _fieldMappings)
             {
                 var property = typeof(User).GetProperty(mapping.Value);
-                if (property != null && properties.Contains(mapping.Key))
-                {
-                    var value = properties[mapping.Key]?.ToString();
-                    if (property.PropertyType == typeof(DateTime?))
-                    {
-                        if (value?.StartsWith("BirthDate:") == true)
-                        {
-                            value = value.Substring("BirthDate:".Length);
-                        }
+                if (property == null || !properties.Contains(mapping.Key))
+                    continue;
 
-                        if (DateTime.TryParse(value, out var dateValue))
-                        {
-                            property.SetValue(user, dateValue);
-                        }
-                        else
-                        {
-                            property.SetValue(user, null);
-                            _logger.LogWarning($"Failed to parse DateTime from value: {value}");
-                        }
-                    }
-                    else
-                    {
-                        property.SetValue(user, Convert.ChangeType(value, property.PropertyType));
-                    }
+                var value = properties[mapping.Key]?.ToString();
+
+                if (property.PropertyType == typeof(DateTime?))
+                {
+                    HandleDateTimeProperty(property, value, user);
+                }
+                else
+                {
+                    property.SetValue(user, Convert.ChangeType(value, property.PropertyType));
                 }
             }
+
             return user;
+        }
+
+        private void HandleDateTimeProperty(PropertyInfo property, string value, User user)
+        {
+            if (value?.StartsWith("BirthDate:") == true)
+            {
+                value = value.Substring("BirthDate:".Length);
+            }
+
+            if (DateTime.TryParse(value, out var dateValue))
+            {
+                property.SetValue(user, dateValue);
+            }
+            else
+            {
+                property.SetValue(user, null);
+                _logger.LogWarning($"Failed to parse DateTime from value: {value}");
+            }
         }
 
         internal string FormatAttributeValue(string attribute, string value) => attribute switch
@@ -181,11 +192,6 @@ namespace Infrastructure.Directory
                 "employeeID" => !string.IsNullOrWhiteSpace(value) && value.Length <= 64,
                 _ => true
             };
-        }
-
-        public Task<IEnumerable<User>> GetUsersFromSourceAsync()
-        {
-            throw new NotImplementedException();
         }
 
         private string GetIdentifier(User user)

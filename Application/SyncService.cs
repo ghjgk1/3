@@ -1,21 +1,22 @@
 ﻿using Domain;
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
+using Application.Interfaces.Data;
 
 [assembly: InternalsVisibleTo("AscDb_to_AD_SynchonizerTests")]
 namespace Application
 {
     public class SyncService 
     {
-        private readonly ISyncRepository _dbRepository;
-        private readonly ISyncRepository _ldapRepository;
+        private readonly ISourceRepository _dbRepository;
+        private readonly ITargetRepository _ldapRepository;
         private readonly ILogger<SyncService> _logger;
         private readonly Dictionary<string, string> _fieldMappings;
         private readonly string _searchBy;
 
         public SyncService(
-            ISyncRepository dbRepository,
-            ISyncRepository ldapRepository,
+            ISourceRepository dbRepository,
+            ITargetRepository ldapRepository,
             ILogger<SyncService> logger,
             Dictionary<string, string> fieldMappings,
             string searchBy)
@@ -37,7 +38,7 @@ namespace Application
                 foreach (var sourceUser in sourceUsers)
                 {
                     var identifier = GetIdentifier(sourceUser);
-                    var targetUser = await _ldapRepository.FindUserInTargetAsync(identifier);
+                    var targetUser = _ldapRepository.FindUserInTarget(identifier);
 
                     if (targetUser == null)
                     {
@@ -50,7 +51,7 @@ namespace Application
                         _logger.LogInformation("User {Identifier} needs update", identifier);
                         if (!dryRun)
                         {
-                            await _ldapRepository.UpdateUserInTargetAsync(sourceUser);
+                            _ldapRepository.UpdateUserInTarget(sourceUser);
                         }
                     }
                     else _logger.LogInformation("User {Identifier} is up-to-date in AD, no update required", identifier);

@@ -71,14 +71,14 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public void FindUserInTargetAsync_WhenSearcherThrowsException_ThrowsAndLogsError()
+        public void FindUserInTarget_WhenSearcherThrowsException_ThrowsAndLogsError()
         {
             // Arrange
             _directoryServiceMock.Setup(x => x.CreateSearcher(It.IsAny<IDirectoryEntry>()))
                 .Throws(new Exception("Test exception"));
 
             // Act & Assert
-            Assert.ThrowsAsync<Exception>(() => _repository.FindUserInTargetAsync("test"));
+            Assert.Throws<Exception>(() => _repository.FindUserInTarget("test"));
 
             _loggerMock.Verify(x => x.Log(
                 LogLevel.Error,
@@ -90,7 +90,7 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public void UpdateUserInTargetAsync_WhenCommitChangesThrowsException_ThrowsAndLogsError()
+        public void UpdateUserInTarget_WhenCommitChangesThrowsException_ThrowsAndLogsError()
         {
             // Arrange
             var properties = new TestPropertyCollection();
@@ -110,8 +110,8 @@ namespace Infrastructure.Directory.Tests
                 .Returns(searcherMock.Object);
 
             // Act & Assert
-            var exception = Assert.ThrowsAsync<Exception>(() =>
-                _repository.UpdateUserInTargetAsync(new User { SamAccountName = "test" }));
+            var exception = Assert.Throws<Exception>(() =>
+                _repository.UpdateUserInTarget(new User { SamAccountName = "test" }));
 
             Assert.AreEqual("Commit failed", exception.Message);
 
@@ -125,7 +125,7 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public async Task FindUserInTargetAsync_UserExists_ReturnsMappedUser()
+        public void FindUserInTarget_UserExists_ReturnsMappedUser()
         {
             // Arrange
             var testSamAccountName = "test.user";
@@ -150,7 +150,7 @@ namespace Infrastructure.Directory.Tests
                 .Returns(searcherMock.Object);
 
             // Act
-            var result = await _repository.FindUserInTargetAsync(testSamAccountName);
+            var result = _repository.FindUserInTarget(testSamAccountName);
 
             // Assert
             Assert.NotNull(result);
@@ -161,7 +161,7 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public async Task FindUserInTargetAsync_UserNotExists_ReturnsNull()
+        public void FindUserInTarget_UserNotExists_ReturnsNull()
         {
             // Arrange
             var searcherMock = new Mock<IDirectorySearcher>();
@@ -171,7 +171,7 @@ namespace Infrastructure.Directory.Tests
                 .Returns(searcherMock.Object);
 
             // Act
-            var result = await _repository.FindUserInTargetAsync("nonexistent.user");
+            var result = _repository.FindUserInTarget("nonexistent.user");
 
             // Assert
             Assert.IsNull(result);
@@ -179,7 +179,7 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public async Task UpdateUserInTargetAsync_UserExists_UpdatesAllMappedProperties()
+        public void UpdateUserInTarget_UserExists_UpdatesAllMappedProperties()
         {
             // Arrange
             var testUser = new User
@@ -209,7 +209,7 @@ namespace Infrastructure.Directory.Tests
                 .Returns(searcherMock.Object);
 
             // Act
-            await _repository.UpdateUserInTargetAsync(testUser);
+             _repository.UpdateUserInTarget(testUser);
 
             // Assert
             Assert.AreEqual("new.email@example.com", properties["mail"]);
@@ -219,7 +219,7 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public async Task UpdateUserInTargetAsync_UserNotExists_LogsWarning()
+        public void UpdateUserInTarget_UserNotExists_LogsWarning()
         {
             // Arrange
             var testUser = new User { SamAccountName = "nonexistent.user" };
@@ -231,7 +231,7 @@ namespace Infrastructure.Directory.Tests
                 .Returns(searcherMock.Object);
 
             // Act
-            await _repository.UpdateUserInTargetAsync(testUser);
+             _repository.UpdateUserInTarget(testUser);
 
             // Assert
             _loggerMock.Verify(x => x.Log(
@@ -244,7 +244,7 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public async Task UpdateUserInTargetAsync_ProtectedAttributes_NotUpdated()
+        public void UpdateUserInTarget_ProtectedAttributes_NotUpdated()
         {
             // Arrange
             var testUser = new User
@@ -270,7 +270,7 @@ namespace Infrastructure.Directory.Tests
                 .Returns(searcherMock.Object);
 
             // Act
-            await _repository.UpdateUserInTargetAsync(testUser);
+            _repository.UpdateUserInTarget(testUser);
 
             // Assert
             Assert.AreEqual("test.user", properties["samAccountName"]); // Не должно измениться
@@ -362,10 +362,10 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public async Task FindUserInTargetAsync_ExistingUser_ReturnsUserWithCorrectProperties()
+        public void FindUserInTarget_ExistingUser_ReturnsUserWithCorrectProperties()
         {
             // Act
-            var result = await _repository.FindUserInTargetAsync(_testSamAccountName);
+            var result = _repository.FindUserInTarget(_testSamAccountName);
 
             // Assert
             Assert.NotNull(result);
@@ -377,7 +377,7 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public async Task UpdateUserInTargetAsync_UpdatesNonProtectedAttributes()
+        public void UpdateUserInTarget_UpdatesNonProtectedAttributes()
         {
             // Arrange
             var testUser = new User
@@ -390,10 +390,10 @@ namespace Infrastructure.Directory.Tests
             };
 
             // Act
-            await _repository.UpdateUserInTargetAsync(testUser);
+             _repository.UpdateUserInTarget(testUser);
 
             // Assert
-            var updatedUser = await _repository.FindUserInTargetAsync(_testSamAccountName);
+            var updatedUser = _repository.FindUserInTarget(_testSamAccountName);
             Assert.AreEqual("updated.email@example.com", updatedUser.Email);
             Assert.AreEqual("UpdatedName", updatedUser.FirstName);
             Assert.AreEqual("UpdatedLastName", updatedUser.LastName);
@@ -404,10 +404,10 @@ namespace Infrastructure.Directory.Tests
         }
 
         [Test]
-        public async Task FindUserInTargetAsync_NonExistingUser_ReturnsNull()
+        public void FindUserInTarget_NonExistingUser_ReturnsNull()
         {
             // Act
-            var result = await _repository.FindUserInTargetAsync("non.existing.user");
+            var result = _repository.FindUserInTarget("non.existing.user");
 
             // Assert
             Assert.IsNull(result);
@@ -449,7 +449,7 @@ namespace Infrastructure.Directory.Tests
         //}
 
         [Test]
-        public async Task Indexer_Set_ResultPropertyCollection_ThrowsException()
+        public void Indexer_Set_ResultPropertyCollection_ThrowsException()
         {
             // Arrange
             using var searcher = new DirectorySearcher(
@@ -466,33 +466,6 @@ namespace Infrastructure.Directory.Tests
                 properties["mail"] = "new@example.com");
         }
 
-        //[Test]
-        //public async Task Contains_PropertyCollectionWithProperty_ReturnsTrue()
-        //{
-        //    // Arrange
-        //    var user = await _repository.FindUserInTargetAsync(_testSamAccountName);
-        //    var properties = ((SystemDirectoryEntry)user.DirectoryEntry).GetNativeDirectoryEntry().Properties;
-
-        //    // Act
-        //    bool exists = new DirectoryPropertyCollection(properties).Contains("mail");
-
-        //    // Assert
-        //    Assert.IsTrue(exists); // "mail" должен существовать
-        //}
-
-        //[Test]
-        //public async Task Contains_PropertyCollectionWithoutProperty_ReturnsFalse()
-        //{
-        //    // Arrange
-        //    var user = await _repository.FindUserInTargetAsync(_testSamAccountName);
-        //    var properties = ((SystemDirectoryEntry)user.DirectoryEntry).GetNativeDirectoryEntry().Properties;
-
-        //    // Act
-        //    bool exists = new DirectoryPropertyCollection(properties).Contains("nonExistentProperty");
-
-        //    // Assert
-        //    Assert.IsFalse(exists); // Свойства нет
-        //}
         public static void CreateTestUserInAD()
         {
             try

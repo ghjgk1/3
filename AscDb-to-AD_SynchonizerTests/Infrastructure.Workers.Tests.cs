@@ -7,7 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System;
 using Application;
-using Domain;
+using Application.Interfaces.Data;
 
 namespace Infrastructure.Workers.Tests
 {
@@ -25,8 +25,8 @@ namespace Infrastructure.Workers.Tests
         {
             _loggerMock = new Mock<ILogger<SyncWorker>>();
             _syncServiceMock = new Mock<SyncService>(
-                Mock.Of<ISyncRepository>(),
-                Mock.Of<ISyncRepository>(),
+                Mock.Of<ISourceRepository>(),
+                Mock.Of<ITargetRepository>(),
                 Mock.Of<ILogger<SyncService>>(),
                 new Dictionary<string, string>(),
                 "SamAccountName");

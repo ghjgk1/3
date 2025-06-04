@@ -3,17 +3,15 @@ using Moq;
 using Microsoft.Extensions.Logging;
 using Domain;
 using Application;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System;
+using Application.Interfaces.Data;
 
 namespace Application.Tests
 {
     [TestFixture]
     public class SyncServiceTests
     {
-        private Mock<ISyncRepository> _dbRepositoryMock;
-        private Mock<ISyncRepository> _ldapRepositoryMock;
+        private Mock<ISourceRepository> _dbRepositoryMock;
+        private Mock<ITargetRepository> _ldapRepositoryMock;
         private Mock<ILogger<SyncService>> _loggerMock;
         private SyncService _syncService;
         private Dictionary<string, string> _fieldMappings;
@@ -21,8 +19,8 @@ namespace Application.Tests
         [SetUp]
         public void Setup()
         {
-            _dbRepositoryMock = new Mock<ISyncRepository>();
-            _ldapRepositoryMock = new Mock<ISyncRepository>();
+            _dbRepositoryMock = new Mock<ISourceRepository>();
+            _ldapRepositoryMock = new Mock<ITargetRepository>();
             _loggerMock = new Mock<ILogger<SyncService>>();
 
             _fieldMappings = new Dictionary<string, string>
@@ -65,8 +63,8 @@ namespace Application.Tests
             var testUser = new User { SamAccountName = "test.user" };
             _dbRepositoryMock.Setup(x => x.GetUsersFromSourceAsync())
                 .ReturnsAsync(new List<User> { testUser });
-            _ldapRepositoryMock.Setup(x => x.FindUserInTargetAsync(It.IsAny<string>()))
-                .ReturnsAsync((User)null);
+            _ldapRepositoryMock.Setup(x => x.FindUserInTarget(It.IsAny<string>()))
+                .Returns((User)null);
 
             // Act
             await _syncService.SyncUsersAsync();
@@ -103,14 +101,14 @@ namespace Application.Tests
 
             _dbRepositoryMock.Setup(x => x.GetUsersFromSourceAsync())
                 .ReturnsAsync(new List<User> { sourceUser });
-            _ldapRepositoryMock.Setup(x => x.FindUserInTargetAsync(It.IsAny<string>()))
-                .ReturnsAsync(targetUser);
+            _ldapRepositoryMock.Setup(x => x.FindUserInTarget(It.IsAny<string>()))
+                .Returns(targetUser);
 
             // Act (dry run = false)
             await _syncService.SyncUsersAsync(dryRun: false);
 
             // Assert
-            _ldapRepositoryMock.Verify(x => x.UpdateUserInTargetAsync(sourceUser), Times.Once);
+            _ldapRepositoryMock.Verify(x => x.UpdateUserInTarget(sourceUser), Times.Once);
             _loggerMock.Verify(x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),
@@ -142,14 +140,14 @@ namespace Application.Tests
 
             _dbRepositoryMock.Setup(x => x.GetUsersFromSourceAsync())
                 .ReturnsAsync(new List<User> { sourceUser });
-            _ldapRepositoryMock.Setup(x => x.FindUserInTargetAsync(It.IsAny<string>()))
-                .ReturnsAsync(targetUser);
+            _ldapRepositoryMock.Setup(x => x.FindUserInTarget(It.IsAny<string>()))
+                .Returns(targetUser);
 
             // Act
             await _syncService.SyncUsersAsync();
 
             // Assert
-            _ldapRepositoryMock.Verify(x => x.UpdateUserInTargetAsync(It.IsAny<User>()), Times.Never);
+            _ldapRepositoryMock.Verify(x => x.UpdateUserInTarget(It.IsAny<User>()), Times.Never);
             _loggerMock.Verify(x => x.Log(
                 LogLevel.Information,
                 It.IsAny<EventId>(),

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "wsRvZ9IBG1M=",
+  "dgSpecHash": "q70pGRppfJY=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\AscDb-to-AD_Synchonizer\\SyncRunner\\SyncRunner.csproj",
+  "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\3\\SyncRunner\\SyncRunner.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
