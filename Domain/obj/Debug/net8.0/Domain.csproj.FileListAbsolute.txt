@@ -23,3 +23,16 @@ C:\Users\Administrator\source\repos\3\Domain\obj\Debug\net8.0\Domain.dll
 C:\Users\Administrator\source\repos\3\Domain\obj\Debug\net8.0\refint\Domain.dll
 C:\Users\Administrator\source\repos\3\Domain\obj\Debug\net8.0\Domain.pdb
 C:\Users\Administrator\source\repos\3\Domain\obj\Debug\net8.0\ref\Domain.dll
+C:\Users\Administrator\Downloads\3\Domain\bin\Debug\net8.0\Domain.deps.json
+C:\Users\Administrator\Downloads\3\Domain\bin\Debug\net8.0\Domain.dll
+C:\Users\Administrator\Downloads\3\Domain\bin\Debug\net8.0\Domain.pdb
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\Domain.csproj.AssemblyReference.cache
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\Domain.AssemblyInfoInputs.cache
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\Domain.AssemblyInfo.cs
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\Domain.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\Domain.sourcelink.json
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\Domain.dll
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\refint\Domain.dll
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\Domain.pdb
+C:\Users\Administrator\Downloads\3\Domain\obj\Debug\net8.0\ref\Domain.dll

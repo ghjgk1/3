@@ -18,10 +18,12 @@ namespace Infrastructure.Directory.Models
             set => _searcher.Filter = value;
         }
 
-        public string[] PropertiesToLoad
+        public void SetPropertiesToLoad(string[] properties)
         {
-            set => _searcher.PropertiesToLoad.AddRange(value);
+            _searcher.PropertiesToLoad.Clear();
+            _searcher.PropertiesToLoad.AddRange(properties);
         }
+
         public IDirectorySearchResult? FindOne()
         {
             var result = _searcher.FindOne();

@@ -60,7 +60,7 @@ namespace Application
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during user synchronization");
-                throw;
+                throw new ApplicationException("Failed to synchronize users.", ex);
             }
         }
 
@@ -72,22 +72,11 @@ namespace Application
 
         internal bool NeedUpdate(User source, User target)
         {
-            foreach (var mapping in _fieldMappings)
-            {
-                var sourceProperty = typeof(User).GetProperty(mapping.Value);
-                var targetProperty = typeof(User).GetProperty(mapping.Value);
-
-                if (sourceProperty == null || targetProperty == null) continue;
-
-                var sourceValue = sourceProperty.GetValue(source);
-                var targetValue = targetProperty.GetValue(target);
-
-                if (!Equals(sourceValue, targetValue))
-                {
-                    return true;
-                }
-            }
-            return false;
+            return _fieldMappings
+                .Select(mapping => mapping.Value)
+                .Select(propertyName => typeof(User).GetProperty(propertyName))
+                .Where(property => property != null)
+                .Any(property => !Equals(property.GetValue(source), property.GetValue(target)));
         }
     }
 }

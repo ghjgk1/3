@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "KpwU6NuOod8=",
+  "dgSpecHash": "I+zUBF8a724=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Administrator\\source\\repos\\3\\AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj",
+  "projectFilePath": "C:\\Users\\Administrator\\Downloads\\3\\AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\core.system.configuration.install\\1.1.0\\core.system.configuration.install.1.1.0.nupkg.sha512",

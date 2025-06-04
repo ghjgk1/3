@@ -46,13 +46,20 @@ namespace Application.Tests
                 .ThrowsAsync(new Exception("Test exception"));
 
             // Act & Assert
-            Assert.ThrowsAsync<Exception>(() => _syncService.SyncUsersAsync());
-            _loggerMock.Verify(x => x.Log(
-                LogLevel.Error,
-                It.IsAny<EventId>(),
-                It.IsAny<It.IsAnyType>(),
-                It.IsAny<Exception>(),
-                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+            var exception = Assert.ThrowsAsync<ApplicationException>(() =>
+                _syncService.SyncUsersAsync());
+
+            Assert.That(exception.Message, Is.EqualTo("Failed to synchronize users."));
+            Assert.That(exception.InnerException, Is.Not.Null);
+            Assert.That(exception.InnerException.Message, Is.EqualTo("Test exception"));
+
+            _loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Error,
+                    It.IsAny<EventId>(),
+                    It.IsAny<It.IsAnyType>(),
+                    It.IsAny<Exception>(),
+                    It.IsAny<Func<It.IsAnyType, Exception?, string>>()),
                 Times.Once);
         }
 
@@ -61,21 +68,24 @@ namespace Application.Tests
         {
             // Arrange
             var testUser = new User { SamAccountName = "test.user" };
+
             _dbRepositoryMock.Setup(x => x.GetUsersFromSourceAsync())
                 .ReturnsAsync(new List<User> { testUser });
+
             _ldapRepositoryMock.Setup(x => x.FindUserInTarget(It.IsAny<string>()))
-                .Returns((User)null);
+                .Returns((User)null); 
 
             // Act
-            await _syncService.SyncUsersAsync();
+            await _syncService.SyncUsersAsync(dryRun: true);
 
             // Assert
-            _loggerMock.Verify(x => x.Log(
-                LogLevel.Warning,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((o, t) => o.ToString().Contains("not found in target system")),
-                It.IsAny<Exception>(),
-                (Func<It.IsAnyType, Exception, string>)It.IsAny<object>()),
+            _loggerMock.Verify(
+                x => x.Log(
+                    LogLevel.Warning,
+                    It.IsAny<EventId>(),
+                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("not found in target system")),
+                    null,
+                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
                 Times.Once);
         }
 

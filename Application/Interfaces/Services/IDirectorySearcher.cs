@@ -3,7 +3,7 @@
     public interface IDirectorySearcher : IDisposable
     {
         string Filter { get; set; }
-        string[] PropertiesToLoad { set; }
+        void SetPropertiesToLoad(string[] properties); 
         IDirectorySearchResult? FindOne();
     }
 }

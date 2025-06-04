@@ -11,7 +11,7 @@
 using System;
 using System.Reflection;
 
-[assembly: System.Reflection.AssemblyMetadata("Sentry.ProjectDirectory", "C:\\Users\\Administrator\\source\\repos\\3\\SyncRunner\\")]
+[assembly: System.Reflection.AssemblyMetadata("Sentry.ProjectDirectory", "C:\\Users\\Administrator\\Downloads\\3\\SyncRunner\\")]
 
 // Создано классом WriteCodeFragment MSBuild.
 

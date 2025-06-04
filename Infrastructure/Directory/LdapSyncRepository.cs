@@ -55,7 +55,7 @@ namespace Infrastructure.Directory
                 using var searcher = _directoryService.CreateSearcher(entry);
 
                 searcher.Filter = $"(sAMAccountName={identifier})";
-                searcher.PropertiesToLoad = _fieldMappings.Keys.ToArray();
+                searcher.SetPropertiesToLoad(_fieldMappings.Keys.ToArray());
 
                 var result = searcher.FindOne();
                 if (result == null) return null;
