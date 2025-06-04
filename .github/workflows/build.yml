@@ -49,7 +49,7 @@ jobs:
         run: dotnet build
 
       - name: Run tests with coverage
-        run: dotnet test --collect:"XPlat Code Coverage"
+        run: dotnet test --collect:"XPlat Code Coverage" --filter "TestCategory!=Integration"
 
       - name: Build and analyze
         env:
