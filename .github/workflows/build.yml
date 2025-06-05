@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Глубокий клон для анализа истории
+          fetch-depth: 0
 
       - name: Cache SonarQube packages
         uses: actions/cache@v4
@@ -52,12 +52,15 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
+          $coverageFile = (Get-ChildItem -Path TestResults -Recurse -Include "coverage.cobertura.xml").FullName
+          Write-Host "Found coverage report: $coverageFile"
+          
           .\.sonar\scanner\dotnet-sonarscanner begin `
             /k:"ghjgk1_3" `
             /o:"ghjgk1" `
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.coverageReportPaths="TestResults/**/*.xml"
+            /d:sonar.host.url="https://sonarcloud.io"  `
+            /d:sonar.coverageReportPaths="$coverageFile"
 
       - name: Build solution
         run: dotnet build
