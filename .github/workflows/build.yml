@@ -5,6 +5,7 @@ on:
       - master
   pull_request:
     types: [opened, synchronize, reopened]
+
 jobs:
   build:
     name: Build and analyze
@@ -16,18 +17,19 @@ jobs:
           java-version: 17
           distribution: 'zulu'
 
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # Глубокий клон для корректного анализа
+          fetch-depth: 0  # Глубокий клон для анализа истории
 
-      - name: Cache SonarQube Cloud packages
+      - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
           path: ~\sonar\cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Cache SonarQube Cloud scanner
+      - name: Cache SonarQube scanner
         id: cache-sonar-scanner
         uses: actions/cache@v4
         with:
@@ -35,7 +37,7 @@ jobs:
           key: ${{ runner.os }}-sonar-scanner
           restore-keys: ${{ runner.os }}-sonar-scanner
 
-      - name: Install SonarQube Cloud scanner
+      - name: Install SonarQube scanner
         if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
         shell: powershell
         run: |
@@ -45,22 +47,28 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Build solution
-        run: dotnet build
-
-      - name: Run tests with coverage
-        run: dotnet test --collect:"XPlat Code Coverage" --filter "TestCategory!=Integration"
-
-      - name: Build and analyze
+      - name: Begin SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin /k:"ghjgk1_3" /o:"ghjgk1" `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io"  `
-            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.cobertura.xml"
+          .\.sonar\scanner\dotnet-sonarscanner begin `
+            /k:"ghjgk1_3" `
+            /o:"ghjgk1" `
+            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.host.url="https://sonarcloud.io"     
 
-          dotnet build
+      - name: Build solution
+        run: dotnet build
 
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+      - name: Run tests with coverage
+        run: |
+          dotnet test --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
+      - name: End SonarQube analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
+        run: |
+          .\.sonar\scanner\dotnet-sonarscanner end `
+            /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
