@@ -38,22 +38,22 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          dotnet test \
-            --configuration Release \
-            --collect:"XPlat Code Coverage" \
-            --settings coverlet.runsettings \
-            --logger trx \
+          dotnet test `
+            --configuration Release `
+            --collect:"XPlat Code Coverage" `
+            --settings coverlet.runsettings `
+            --logger trx `
             --results-directory TestResults
 
       - name: Begin SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin \
-            /k:"your_project_key" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io"  \
-            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.cobertura.xml" \
+          dotnet sonarscanner begin `
+            /k:"your_project_key" `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.host.url="https://sonarcloud.io"  `
+            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.cobertura.xml" `
             /d:sonar.coverage.exclusions="**/Migrations/**"
 
       - name: Build solution
