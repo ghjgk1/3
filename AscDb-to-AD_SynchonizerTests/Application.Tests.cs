@@ -171,8 +171,8 @@ namespace Application.Tests
         public void NeedUpdate_ShouldReturnTrue_WhenPropertiesDiffer()
         {
             //Arrange
-            var source = new User { FirstName = "New" };
-            var target = new User { FirstName = "Old" };
+            var source = new User { SamAccountName = "Same", FirstName = "New" };
+            var target = new User { SamAccountName = "Same", FirstName = "Old" };
 
             //Act
             var result = _syncService.NeedUpdate(source, target);
@@ -185,8 +185,8 @@ namespace Application.Tests
         public void NeedUpdate_ShouldReturnFalse_WhenPropertiesAreSame()
         {
             //Arrange
-            var source = new User { FirstName = "Same", LastName = "Same" };
-            var target = new User { FirstName = "Same", LastName = "Same" };
+            var source = new User { SamAccountName = "Same", FirstName = "Same", LastName = "Same" };
+            var target = new User { SamAccountName = "Same", FirstName = "Same", LastName = "Same" };
 
             //Act
             var result = _syncService.NeedUpdate(source, target);

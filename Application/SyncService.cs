@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using System.Runtime.CompilerServices;
 using Application.Interfaces.Data;
+using System.Reflection;
+using Domain.Exceptions;
 
 [assembly: InternalsVisibleTo("AscDb_to_AD_SynchonizerTests")]
 namespace Application
@@ -60,7 +62,7 @@ namespace Application
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error during user synchronization");
-                throw new ApplicationException("Failed to synchronize users.", ex);
+                throw new UserSynchronizationException("Failed to synchronize users.", ex);
             }
         }
 
@@ -75,8 +77,9 @@ namespace Application
             return _fieldMappings
                 .Select(mapping => mapping.Value)
                 .Select(propertyName => typeof(User).GetProperty(propertyName))
-                .Where(property => property != null)
-                .Any(property => !Equals(property.GetValue(source), property.GetValue(target)));
+                .OfType<PropertyInfo>()
+                .Any(property =>
+                    !Equals(property.GetValue(source), property.GetValue(target)));
         }
     }
 }

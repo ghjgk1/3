@@ -127,10 +127,25 @@ namespace Infrastructure.Directory
 
         internal User MapToUser(IPropertyCollection properties)
         {
-            var user = new User();
+            if (!_fieldMappings.TryGetValue("SamAccountName", out var samAccountNameAttr) ||
+                !properties.Contains(samAccountNameAttr))
+            {
+                throw new InvalidOperationException("SamAccountName is missing in LDAP properties.");
+            }
+
+            var samAccountName = properties[samAccountNameAttr]?.ToString();
+            if (string.IsNullOrEmpty(samAccountName))
+            {
+                throw new InvalidOperationException("SamAccountName cannot be empty.");
+            }
+
+            var user = new User { SamAccountName = samAccountName };
 
             foreach (var mapping in _fieldMappings)
             {
+                if (mapping.Value == nameof(User.SamAccountName))
+                    continue;
+
                 var property = typeof(User).GetProperty(mapping.Value);
                 if (property == null || !properties.Contains(mapping.Key))
                     continue;

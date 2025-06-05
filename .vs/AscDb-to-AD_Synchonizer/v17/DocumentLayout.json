@@ -1,69 +1,81 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Administrator\\Downloads\\3\\",
+  "WorkspaceRootPath": "C:\\Users\\Administrator\\source\\repos\\3\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|c:\\users\\administrator\\downloads\\3\\ascdb-to-ad_synchonizertests\\application.tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|solutionrelative:ascdb-to-ad_synchonizertests\\application.tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|c:\\users\\administrator\\source\\repos\\3\\ascdb-to-ad_synchonizertests\\ascdb-to-ad_synchonizertests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|solutionrelative:ascdb-to-ad_synchonizertests\\ascdb-to-ad_synchonizertests.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\downloads\\3\\application\\syncservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\syncservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\downloads\\3\\infrastructure\\directory\\models\\systemdirectorysearcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\directory\\models\\systemdirectorysearcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\downloads\\3\\infrastructure\\directory\\ldapsyncrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\source\\repos\\3\\infrastructure\\directory\\ldapsyncrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\directory\\ldapsyncrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\downloads\\3\\application\\interfaces\\services\\idirectorysearcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\idirectorysearcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\source\\repos\\3\\infrastructure\\directory\\models\\systemdirectorysearcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\directory\\models\\systemdirectorysearcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DAFF4D61-762D-44F1-9371-658F61787E18}|SyncRunner\\SyncRunner.csproj|c:\\users\\administrator\\downloads\\3\\syncrunner\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{DAFF4D61-762D-44F1-9371-658F61787E18}|SyncRunner\\SyncRunner.csproj|solutionrelative:syncrunner\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9F545859-638D-4B36-8AB3-0C6EEBCDABF4}|Domain\\Domain.csproj|c:\\users\\administrator\\source\\repos\\3\\domain\\exceptions\\usersynchronizationexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F545859-638D-4B36-8AB3-0C6EEBCDABF4}|Domain\\Domain.csproj|solutionrelative:domain\\exceptions\\usersynchronizationexception.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\downloads\\3\\application\\interfaces\\data\\itargetrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\data\\itargetrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{9F545859-638D-4B36-8AB3-0C6EEBCDABF4}|Domain\\Domain.csproj|c:\\users\\administrator\\source\\repos\\3\\domain\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{9F545859-638D-4B36-8AB3-0C6EEBCDABF4}|Domain\\Domain.csproj|solutionrelative:domain\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\downloads\\3\\infrastructure\\data\\efsyncrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\data\\efsyncrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\downloads\\3\\infrastructure\\data\\ascdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\data\\ascdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\downloads\\3\\application\\interfaces\\data\\isourcerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\data\\isourcerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\downloads\\3\\application\\interfaces\\services\\idirectoryentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\idirectoryentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\downloads\\3\\application\\interfaces\\services\\idirectorysearchresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\idirectorysearchresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\downloads\\3\\application\\interfaces\\services\\idirectoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\idirectoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\downloads\\3\\application\\interfaces\\services\\ipropertycollection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\ipropertycollection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|c:\\users\\administrator\\downloads\\3\\ascdb-to-ad_synchonizertests\\infrastructure.directory.tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|c:\\users\\administrator\\source\\repos\\3\\ascdb-to-ad_synchonizertests\\infrastructure.directory.tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|solutionrelative:ascdb-to-ad_synchonizertests\\infrastructure.directory.tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\downloads\\3\\infrastructure\\workers\\syncworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|c:\\users\\administrator\\source\\repos\\3\\ascdb-to-ad_synchonizertests\\application.tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{792F6D46-BFAD-4D41-AFAD-50F04317061F}|AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj|solutionrelative:ascdb-to-ad_synchonizertests\\application.tests.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\source\\repos\\3\\application\\interfaces\\services\\idirectorysearcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\idirectorysearcher.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\source\\repos\\3\\application\\syncservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\syncservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{DAFF4D61-762D-44F1-9371-658F61787E18}|SyncRunner\\SyncRunner.csproj|c:\\users\\administrator\\source\\repos\\3\\syncrunner\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{DAFF4D61-762D-44F1-9371-658F61787E18}|SyncRunner\\SyncRunner.csproj|solutionrelative:syncrunner\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\source\\repos\\3\\application\\interfaces\\data\\itargetrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\data\\itargetrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\source\\repos\\3\\infrastructure\\data\\efsyncrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\data\\efsyncrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\source\\repos\\3\\infrastructure\\data\\ascdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\data\\ascdbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\source\\repos\\3\\application\\interfaces\\data\\isourcerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\data\\isourcerepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\source\\repos\\3\\application\\interfaces\\services\\idirectoryentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\idirectoryentry.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\source\\repos\\3\\application\\interfaces\\services\\idirectorysearchresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\idirectorysearchresult.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\source\\repos\\3\\application\\interfaces\\services\\idirectoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\idirectoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|c:\\users\\administrator\\source\\repos\\3\\application\\interfaces\\services\\ipropertycollection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{181C2095-0463-4D75-A548-096E610856B1}|Application\\Application.csproj|solutionrelative:application\\interfaces\\services\\ipropertycollection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|c:\\users\\administrator\\source\\repos\\3\\infrastructure\\workers\\syncworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{CDB33678-58CC-49ED-A311-C18CC7C10735}|Infrastructure\\Infrastructure.csproj|solutionrelative:infrastructure\\workers\\syncworker.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -74,80 +86,100 @@
       "DocumentGroups": [
         {
           "DockedWidth": 257,
-          "SelectedChildIndex": 2,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "SystemDirectorySearcher.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Directory\\Models\\SystemDirectorySearcher.cs",
-              "RelativeDocumentMoniker": "Infrastructure\\Directory\\Models\\SystemDirectorySearcher.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Directory\\Models\\SystemDirectorySearcher.cs",
-              "RelativeToolTip": "Infrastructure\\Directory\\Models\\SystemDirectorySearcher.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA1AAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-04T06:16:06.545Z",
+              "DocumentIndex": 0,
+              "Title": "AscDb-to-AD_SynchonizerTests",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj",
+              "RelativeDocumentMoniker": "AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj",
+              "RelativeToolTip": "AscDb-to-AD_SynchonizerTests\\AscDb-to-AD_SynchonizerTests.csproj",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAACAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2025-06-05T04:06:07.368Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "User.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Domain\\User.cs",
+              "RelativeDocumentMoniker": "Domain\\User.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Domain\\User.cs",
+              "RelativeToolTip": "Domain\\User.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAA7AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T03:35:07.688Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "UserSynchronizationException.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Domain\\Exceptions\\UserSynchronizationException.cs",
+              "RelativeDocumentMoniker": "Domain\\Exceptions\\UserSynchronizationException.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Domain\\Exceptions\\UserSynchronizationException.cs",
+              "RelativeToolTip": "Domain\\Exceptions\\UserSynchronizationException.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-05T03:28:52.591Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "SystemDirectorySearcher.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Directory\\Models\\SystemDirectorySearcher.cs",
+              "RelativeDocumentMoniker": "Infrastructure\\Directory\\Models\\SystemDirectorySearcher.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Directory\\Models\\SystemDirectorySearcher.cs",
+              "RelativeToolTip": "Infrastructure\\Directory\\Models\\SystemDirectorySearcher.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAA1AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-04T06:16:06.545Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
               "Title": "IDirectorySearcher.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IDirectorySearcher.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IDirectorySearcher.cs",
               "RelativeDocumentMoniker": "Application\\Interfaces\\Services\\IDirectorySearcher.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IDirectorySearcher.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IDirectorySearcher.cs",
               "RelativeToolTip": "Application\\Interfaces\\Services\\IDirectorySearcher.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAgAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-04T05:23:12.544Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "Application.Tests.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\AscDb-to-AD_SynchonizerTests\\Application.Tests.cs",
-              "RelativeDocumentMoniker": "AscDb-to-AD_SynchonizerTests\\Application.Tests.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\AscDb-to-AD_SynchonizerTests\\Application.Tests.cs",
-              "RelativeToolTip": "AscDb-to-AD_SynchonizerTests\\Application.Tests.cs",
-              "ViewState": "AgIAACUAAAAAAAAAAAAewDcAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-04T06:21:48.745Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "SyncService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Application\\SyncService.cs",
-              "RelativeDocumentMoniker": "Application\\SyncService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Application\\SyncService.cs",
-              "RelativeToolTip": "Application\\SyncService.cs",
-              "ViewState": "AgIAABYAAAAAAAAAAAAgwCAAAAAPAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-06-04T04:18:17.949Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\SyncRunner\\Program.cs",
-              "RelativeDocumentMoniker": "SyncRunner\\Program.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\SyncRunner\\Program.cs",
-              "RelativeToolTip": "SyncRunner\\Program.cs",
-              "ViewState": "AgIAADAAAAAAAAAAAAAYwH0AAAAXAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T08:40:01.961Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-06-04T05:23:12.544Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 6,
+              "Title": "Application.Tests.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\AscDb-to-AD_SynchonizerTests\\Application.Tests.cs",
+              "RelativeDocumentMoniker": "AscDb-to-AD_SynchonizerTests\\Application.Tests.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\AscDb-to-AD_SynchonizerTests\\Application.Tests.cs",
+              "RelativeToolTip": "AscDb-to-AD_SynchonizerTests\\Application.Tests.cs",
+              "ViewState": "AgIAAJ8AAAAAAAAAAAAewK0AAABRAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-04T06:21:48.745Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "SyncService.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\SyncService.cs",
+              "RelativeDocumentMoniker": "Application\\SyncService.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\SyncService.cs",
+              "RelativeToolTip": "Application\\SyncService.cs",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAowEEAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-06-04T04:18:17.949Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
               "Title": "ITargetRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Data\\ITargetRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Data\\ITargetRepository.cs",
               "RelativeDocumentMoniker": "Application\\Interfaces\\Data\\ITargetRepository.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Data\\ITargetRepository.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Data\\ITargetRepository.cs",
               "RelativeToolTip": "Application\\Interfaces\\Data\\ITargetRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -155,24 +187,48 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "LdapSyncRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Directory\\LdapSyncRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Directory\\LdapSyncRepository.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Directory\\LdapSyncRepository.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Directory\\LdapSyncRepository.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Directory\\LdapSyncRepository.cs",
               "RelativeToolTip": "Infrastructure\\Directory\\LdapSyncRepository.cs",
-              "ViewState": "AgIAACgAAAAAAAAAAAAewDkAAABKAAAAAAAAAA==",
+              "ViewState": "AgIAAFQAAAAAAAAAAAAnwGYAAABPAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-06-04T04:10:08.896Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 5,
+              "Title": "Infrastructure.Directory.Tests.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\AscDb-to-AD_SynchonizerTests\\Infrastructure.Directory.Tests.cs",
+              "RelativeDocumentMoniker": "AscDb-to-AD_SynchonizerTests\\Infrastructure.Directory.Tests.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\AscDb-to-AD_SynchonizerTests\\Infrastructure.Directory.Tests.cs",
+              "RelativeToolTip": "AscDb-to-AD_SynchonizerTests\\Infrastructure.Directory.Tests.cs",
+              "ViewState": "AgIAAKsAAAAAAAAAAAAIwDkAAAAhAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T06:07:40.795Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\SyncRunner\\Program.cs",
+              "RelativeDocumentMoniker": "SyncRunner\\Program.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\SyncRunner\\Program.cs",
+              "RelativeToolTip": "SyncRunner\\Program.cs",
+              "ViewState": "AgIAADAAAAAAAAAAAAAYwH0AAAAXAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-05-26T08:40:01.961Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
               "Title": "AscDbContext.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Data\\AscDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Data\\AscDbContext.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Data\\AscDbContext.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Data\\AscDbContext.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Data\\AscDbContext.cs",
               "RelativeToolTip": "Infrastructure\\Data\\AscDbContext.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -180,11 +236,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 13,
               "Title": "ISourceRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Data\\ISourceRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Data\\ISourceRepository.cs",
               "RelativeDocumentMoniker": "Application\\Interfaces\\Data\\ISourceRepository.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Data\\ISourceRepository.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Data\\ISourceRepository.cs",
               "RelativeToolTip": "Application\\Interfaces\\Data\\ISourceRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAKAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -192,11 +248,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 14,
               "Title": "IDirectoryEntry.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IDirectoryEntry.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IDirectoryEntry.cs",
               "RelativeDocumentMoniker": "Application\\Interfaces\\Services\\IDirectoryEntry.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IDirectoryEntry.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IDirectoryEntry.cs",
               "RelativeToolTip": "Application\\Interfaces\\Services\\IDirectoryEntry.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -204,11 +260,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 11,
               "Title": "EfSyncRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Data\\EfSyncRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Data\\EfSyncRepository.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Data\\EfSyncRepository.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Data\\EfSyncRepository.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Data\\EfSyncRepository.cs",
               "RelativeToolTip": "Infrastructure\\Data\\EfSyncRepository.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAADEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -216,11 +272,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 15,
               "Title": "IDirectorySearchResult.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IDirectorySearchResult.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IDirectorySearchResult.cs",
               "RelativeDocumentMoniker": "Application\\Interfaces\\Services\\IDirectorySearchResult.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IDirectorySearchResult.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IDirectorySearchResult.cs",
               "RelativeToolTip": "Application\\Interfaces\\Services\\IDirectorySearchResult.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -228,11 +284,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 16,
               "Title": "IDirectoryService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IDirectoryService.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IDirectoryService.cs",
               "RelativeDocumentMoniker": "Application\\Interfaces\\Services\\IDirectoryService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IDirectoryService.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IDirectoryService.cs",
               "RelativeToolTip": "Application\\Interfaces\\Services\\IDirectoryService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -240,11 +296,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 17,
               "Title": "IPropertyCollection.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IPropertyCollection.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IPropertyCollection.cs",
               "RelativeDocumentMoniker": "Application\\Interfaces\\Services\\IPropertyCollection.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Application\\Interfaces\\Services\\IPropertyCollection.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Application\\Interfaces\\Services\\IPropertyCollection.cs",
               "RelativeToolTip": "Application\\Interfaces\\Services\\IPropertyCollection.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
@@ -252,37 +308,15 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "Infrastructure.Directory.Tests.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\AscDb-to-AD_SynchonizerTests\\Infrastructure.Directory.Tests.cs",
-              "RelativeDocumentMoniker": "AscDb-to-AD_SynchonizerTests\\Infrastructure.Directory.Tests.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\AscDb-to-AD_SynchonizerTests\\Infrastructure.Directory.Tests.cs",
-              "RelativeToolTip": "AscDb-to-AD_SynchonizerTests\\Infrastructure.Directory.Tests.cs",
-              "ViewState": "AgIAAA4AAAAAAAAAAAAkwEkAAAAkAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-26T06:07:40.795Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 18,
               "Title": "SyncWorker.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Workers\\SyncWorker.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Workers\\SyncWorker.cs",
               "RelativeDocumentMoniker": "Infrastructure\\Workers\\SyncWorker.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Downloads\\3\\Infrastructure\\Workers\\SyncWorker.cs",
+              "ToolTip": "C:\\Users\\Administrator\\source\\repos\\3\\Infrastructure\\Workers\\SyncWorker.cs",
               "RelativeToolTip": "Infrastructure\\Workers\\SyncWorker.cs",
               "ViewState": "AgIAABUAAAAAAAAAAAAawCcAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-29T07:43:32.806Z"
-            }
-          ]
-        },
-        {
-          "DockedWidth": 251,
-          "SelectedChildIndex": -1,
-          "Children": [
-            {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
             }
           ]
         }
