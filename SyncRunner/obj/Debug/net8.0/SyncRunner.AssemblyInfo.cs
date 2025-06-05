@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SyncRunner")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+349b8cbf71f14adfd04d7529f241317bbfb16856")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e3a52c91a4e7d04b860ad50b2e3f7dc34c5610b6")]
 [assembly: System.Reflection.AssemblyProductAttribute("SyncRunner")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SyncRunner")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

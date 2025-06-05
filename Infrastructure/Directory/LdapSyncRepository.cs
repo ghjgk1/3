@@ -127,7 +127,7 @@ namespace Infrastructure.Directory
 
         internal User MapToUser(IPropertyCollection properties)
         {
-            if (!_fieldMappings.TryGetValue("SamAccountName", out var samAccountNameAttr) ||
+            if (!_fieldMappings.TryGetValue("sAMAccountName", out var samAccountNameAttr) ||
                 !properties.Contains(samAccountNameAttr))
             {
                 throw new InvalidOperationException("SamAccountName is missing in LDAP properties.");

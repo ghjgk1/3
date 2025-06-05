@@ -32,7 +32,7 @@ namespace Infrastructure.Directory.Tests
         // Тестовая реализация IPropertyCollection
         private class TestPropertyCollection : IPropertyCollection
         {
-            private readonly Dictionary<string, object> _properties = new Dictionary<string, object>();
+            private readonly Dictionary<string, object> _properties = new(StringComparer.OrdinalIgnoreCase);
 
             public object? this[string propertyName]
             {
@@ -55,7 +55,7 @@ namespace Infrastructure.Directory.Tests
             _loggerMock = new Mock<ILogger<LdapSyncRepository>>();
             _fieldMappings = new Dictionary<string, string>
             {
-                { "samAccountName", "SamAccountName" },
+                { "sAMAccountName", "SamAccountName" },
                 { "mail", "Email" },
                 { "givenName", "FirstName" },
                 { "info", "HireDate" }
@@ -94,7 +94,7 @@ namespace Infrastructure.Directory.Tests
         {
             // Arrange
             var properties = new TestPropertyCollection();
-            properties.Add("samAccountName", "test");
+            properties.Add("sAMAccountName", "test");
 
             var entryMock = new Mock<IDirectoryEntry>();
             entryMock.Setup(x => x.Properties).Returns(properties);
@@ -134,7 +134,7 @@ namespace Infrastructure.Directory.Tests
             var testHireDate = "2000-01-01";
 
             var properties = new TestPropertyCollection();
-            properties.Add("samAccountName", testSamAccountName);
+            properties.Add("sAMAccountName", testSamAccountName);
             properties.Add("mail", testEmail);
             properties.Add("givenName", testFirstName);
             properties.Add("info", testHireDate);
@@ -191,7 +191,7 @@ namespace Infrastructure.Directory.Tests
             };
 
             var properties = new TestPropertyCollection();
-            properties.Add("samAccountName", "test.user");
+            properties.Add("sAMAccountName", "test.user");
             properties.Add("mail", "old.email@example.com");
             properties.Add("givenName", "Old Name");
             properties.Add("info", "BirthDate:2000-01-01");
@@ -254,7 +254,7 @@ namespace Infrastructure.Directory.Tests
             };
 
             var properties = new TestPropertyCollection();
-            properties.Add("samAccountName", "test.user");
+            properties.Add("sAMAccountName", "test.user");
             properties.Add("mail", "old.email@example.com");
 
             var entryMock = new Mock<IDirectoryEntry>();
@@ -273,7 +273,7 @@ namespace Infrastructure.Directory.Tests
             _repository.UpdateUserInTarget(testUser);
 
             // Assert
-            Assert.AreEqual("test.user", properties["samAccountName"]); // Не должно измениться
+            Assert.AreEqual("test.user", properties["sAMAccountName"]); // Не должно измениться
             Assert.AreEqual("new.email@example.com", properties["mail"]); // Должно измениться
         }
 
@@ -336,7 +336,7 @@ namespace Infrastructure.Directory.Tests
 
             _fieldMappings = new Dictionary<string, string>
             {
-                { "samAccountName", "SamAccountName" },
+                { "sAMAccountName", "SamAccountName" },
                 { "mail", "Email" },
                 { "givenName", "FirstName" },
                 { "sn", "LastName" },
@@ -412,41 +412,6 @@ namespace Infrastructure.Directory.Tests
             // Assert
             Assert.IsNull(result);
         }
-
-        //[Test]
-        //public async Task Indexer_Get_PropertyCollectionWithMissingProperty_ReturnsNull()
-        //{
-        //    // Arrange
-        //    var user = await _repository.FindUserInTargetAsync(_testSamAccountName);
-        //    var properties = ((SystemDirectoryEntry)user.DirectoryEntry).GetNativeDirectoryEntry().Properties;
-
-        //    // Act
-        //    var result = new DirectoryPropertyCollection(properties)["nonExistentProperty"];
-
-        //    // Assert
-        //    Assert.IsNull(result); // Проверяем, что свойство не существует (null)
-        //}
-
-        //[Test]
-        //public async Task Indexer_Get_ResultPropertyCollectionWithMissingProperty_ReturnsNull()
-        //{
-        //    // Arrange
-        //    using var searcher = new DirectorySearcher(
-        //        new DirectoryEntry(ouPath, adminUser, adminPassword))
-        //    {
-        //        Filter = $"(sAMAccountName={_testSamAccountName})",
-        //        PropertiesToLoad = new[] { "nonExistentProperty" } // Загружаем несуществующее свойство
-        //    };
-
-        //    var result = searcher.FindOne();
-        //    var properties = new DirectoryPropertyCollection(result.Properties);
-
-        //    // Act
-        //    var value = properties["nonExistentProperty"];
-
-        //    // Assert
-        //    Assert.IsNull(value); // Должен вернуть null
-        //}
 
         [Test]
         public void Indexer_Set_ResultPropertyCollection_ThrowsException()

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Domain;
 using Application;
 using Application.Interfaces.Data;
+using Domain.Exceptions;
 
 namespace Application.Tests
 {
@@ -46,7 +47,7 @@ namespace Application.Tests
                 .ThrowsAsync(new Exception("Test exception"));
 
             // Act & Assert
-            var exception = Assert.ThrowsAsync<ApplicationException>(() =>
+            var exception = Assert.ThrowsAsync<UserSynchronizationException>(() =>
                 _syncService.SyncUsersAsync());
 
             Assert.That(exception.Message, Is.EqualTo("Failed to synchronize users."));
