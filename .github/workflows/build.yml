@@ -1,10 +1,12 @@
 name: SonarQube Analysis
-
 on:
   push:
     branches: [ master ]
   pull_request:
     types: [ opened, synchronize, reopened ]
+
+env:
+  DOTNET_VERSION: '7.0.x'
 
 jobs:
   build:
@@ -23,15 +25,25 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
+          dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Install SonarScanner
-        run: dotnet tool install --global dotnet-sonarscanner
+      - name: Install tools
+        run: |
+          dotnet tool install --global dotnet-sonarscanner
+          dotnet tool install --global coverlet.console
+
+      - name: Create coverlet config
+        shell: bash
+        run: |
+          cat > coverlet.runsettings <<EOF
+          <CoverletRunSettings>
+            <Format>cobertura</Format>
+            <IncludeTestAssembly>false</IncludeTestAssembly>
+          </CoverletRunSettings>
+          EOF
 
       - name: Restore dependencies
         run: dotnet restore
@@ -39,20 +51,37 @@ jobs:
       - name: Run tests with coverage
         run: |
           dotnet test `
-            --filter "TestCategory!=Integration" `
             --configuration Release `
+            --settings coverlet.runsettings `
             --collect:"XPlat Code Coverage" `
-            --results-directory TestResults
+            --logger trx `
+            --results-directory TestResults `
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+
+      - name: Verify coverage file
+        shell: powershell
+        run: |
+          $coverageFile = Get-ChildItem -Path TestResults -Recurse -Filter "coverage.cobertura.xml" | Select-Object -First 1
+          if ($coverageFile) {
+            Write-Host "Coverage file found at: $($coverageFile.FullName)"
+            echo "COVERAGE_FILE=$($coverageFile.FullName)" >> $env:GITHUB_ENV
+          } else {
+            Write-Host "##[error] No coverage file found!"
+            exit 1
+          }
 
       - name: Begin SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin /k:"ghjgk1_3" /o:"ghjgk1" `
-            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io"  `
-            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.cobertura.xml" `
-            /d:sonar.coverage.exclusions="**/Migrations/**"
+          dotnet sonarscanner begin `
+            /k:"ghjgk1_3" `
+            /o:"ghjgk1" `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.cs.opencover.reportsPaths="${{ env.COVERAGE_FILE }}" `
+            /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**" `
+            /d:sonar.verbose=true
 
       - name: Build solution
         run: dotnet build --configuration Release --no-restore
@@ -60,5 +89,4 @@ jobs:
       - name: End SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
