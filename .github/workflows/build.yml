@@ -6,7 +6,7 @@ on:
     types: [ opened, synchronize, reopened ]
 
 env:
-  DOTNET_VERSION: '7.0.x'
+  DOTNET_VERSION: '8.0.x'  # Указываем версию .NET 8.0
 
 jobs:
   build:
@@ -35,28 +35,42 @@ jobs:
           dotnet tool install --global dotnet-sonarscanner
           dotnet tool install --global coverlet.console
 
-      - name: Create coverlet config
+      - name: Create correct coverlet config
         shell: bash
         run: |
           cat > coverlet.runsettings <<EOF
-          <CoverletRunSettings>
-            <Format>cobertura</Format>
-            <IncludeTestAssembly>false</IncludeTestAssembly>
-          </CoverletRunSettings>
+          <?xml version="1.0" encoding="utf-8"?>
+          <RunSettings>
+            <DataCollectionRunSettings>
+              <DataCollectors>
+                <DataCollector friendlyName="XPlat code coverage">
+                  <Configuration>
+                    <Format>cobertura</Format>
+                  </Configuration>
+                </DataCollector>
+              </DataCollectors>
+            </DataCollectionRunSettings>
+          </RunSettings>
           EOF
 
       - name: Restore dependencies
         run: dotnet restore
 
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
+
       - name: Run tests with coverage
         run: |
-          dotnet test `
-            --configuration Release `
-            --settings coverlet.runsettings `
-            --collect:"XPlat Code Coverage" `
-            --logger trx `
-            --results-directory TestResults `
-            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=cobertura
+          dotnet test \
+            --configuration Release \
+            --settings coverlet.runsettings \
+            --collect:"XPlat Code Coverage" \
+            --logger trx \
+            --results-directory TestResults \
+            --no-build \
+            /p:CollectCoverage=true \
+            /p:CoverletOutputFormat=cobertura \
+            /p:CoverletOutput=TestResults/coverage.cobertura.xml
 
       - name: Verify coverage file
         shell: powershell
@@ -74,16 +88,16 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin `
-            /k:"ghjgk1_3" `
-            /o:"ghjgk1" `
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.cs.opencover.reportsPaths="${{ env.COVERAGE_FILE }}" `
-            /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**" `
+          dotnet sonarscanner begin \
+            /k:"ghjgk1_3" \
+            /o:"ghjgk1" \
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
+            /d:sonar.host.url="https://sonarcloud.io" \
+            /d:sonar.cs.opencover.reportsPaths="${{ env.COVERAGE_FILE }}" \
+            /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**" \
             /d:sonar.verbose=true
 
-      - name: Build solution
+      - name: Build solution for SonarQube
         run: dotnet build --configuration Release --no-restore
 
       - name: End SonarQube analysis
