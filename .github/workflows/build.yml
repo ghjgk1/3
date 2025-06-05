@@ -1,10 +1,9 @@
-name: SonarQube
+name: SonarQube Analysis
 on:
   push:
-    branches:
-      - master
+    branches: [ master ]
   pull_request:
-    types: [opened, synchronize, reopened]
+    types: [ opened, synchronize, reopened ]
 
 jobs:
   build:
@@ -29,20 +28,8 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-      - name: Cache SonarQube scanner
-        id: cache-sonar-scanner
-        uses: actions/cache@v4
-        with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-
-      - name: Install SonarQube scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
-        run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+      - name: Install SonarScanner
+        run: dotnet tool install --global dotnet-sonarscanner
 
       - name: Restore dependencies
         run: dotnet restore
@@ -50,34 +37,23 @@ jobs:
       - name: Begin SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin `
-            /k:"ghjgk1_3" `
-            /o:"ghjgk1" `
+          dotnet sonarscanner begin /k:"ghjgk1_3" /o:"ghjgk1" `
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io" 
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.cs.opencover.reportsPaths="**/coverage.cobertura.xml"
 
       - name: Build solution
         run: dotnet build
 
       - name: Run tests with coverage
         run: |
-          dotnet test --filter "TestCategory!=Integration" --collect:"XPlat Code Coverage" --results-directory ./TestResults
-
-      - name: Find coverage file
-        shell: powershell
-        run: |
-          # Ищем файл покрытия после выполнения тестов
-          $coverageFile = (Get-ChildItem -Path TestResults -Recurse -Include "coverage.cobertura.xml").FullName
-          Write-Host "Found coverage report: $coverageFile"
-          echo "COVERAGE_FILE=$coverageFile" >> $env:GITHUB_ENV
+          dotnet test --filter "TestCategory!=Integration" `
+            --collect:"XPlat Code Coverage" `
+            --results-directory TestResults `
+            -- DataCollectionRunSettings.DataCollectors.DataCollector.Configuration.Format=opencover
 
       - name: End SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner end `
-            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.coverageReportPaths="${{ env.COVERAGE_FILE }}"
+        run: dotnet sonarscanner end /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
