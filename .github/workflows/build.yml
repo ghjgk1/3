@@ -61,15 +61,15 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          dotnet test \
-            --configuration Release \
-            --settings coverlet.runsettings \
-            --collect:"XPlat Code Coverage" \
-            --logger trx \
-            --results-directory TestResults \
-            --no-build \
-            /p:CollectCoverage=true \
-            /p:CoverletOutputFormat=cobertura \
+          dotnet test `
+            --configuration Release `
+            --settings coverlet.runsettings `
+            --collect:"XPlat Code Coverage" `
+            --logger trx `
+            --results-directory TestResults `
+            --no-build `
+            /p:CollectCoverage=true `
+            /p:CoverletOutputFormat=cobertura `
             /p:CoverletOutput=TestResults/coverage.cobertura.xml
 
       - name: Verify coverage file
@@ -88,13 +88,13 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          dotnet sonarscanner begin \
-            /k:"ghjgk1_3" \
-            /o:"ghjgk1" \
-            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" \
-            /d:sonar.host.url="https://sonarcloud.io" \
-            /d:sonar.cs.opencover.reportsPaths="${{ env.COVERAGE_FILE }}" \
-            /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**" \
+          dotnet sonarscanner begin `
+            /k:"ghjgk1_3" `
+            /o:"ghjgk1" `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.cs.opencover.reportsPaths="${{ env.COVERAGE_FILE }}" `
+            /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**" `
             /d:sonar.verbose=true
 
       - name: Build solution for SonarQube
