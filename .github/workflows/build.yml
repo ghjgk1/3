@@ -52,15 +52,11 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         shell: powershell
         run: |
-          $coverageFile = (Get-ChildItem -Path TestResults -Recurse -Include "coverage.cobertura.xml").FullName
-          Write-Host "Found coverage report: $coverageFile"
-          
           .\.sonar\scanner\dotnet-sonarscanner begin `
             /k:"ghjgk1_3" `
             /o:"ghjgk1" `
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io"  `
-            /d:sonar.coverageReportPaths="$coverageFile"
+            /d:sonar.host.url="https://sonarcloud.io" 
 
       - name: Build solution
         run: dotnet build
@@ -69,9 +65,13 @@ jobs:
         run: |
           dotnet test --filter "TestCategory!=Integration" --collect:"XPlat Code Coverage" --results-directory ./TestResults
 
-      - name: Check for coverage file
+      - name: Find coverage file
+        shell: powershell
         run: |
-          ls TestResults/**/*.xml
+          # Ищем файл покрытия после выполнения тестов
+          $coverageFile = (Get-ChildItem -Path TestResults -Recurse -Include "coverage.cobertura.xml").FullName
+          Write-Host "Found coverage report: $coverageFile"
+          echo "COVERAGE_FILE=$coverageFile" >> $env:GITHUB_ENV
 
       - name: End SonarQube analysis
         env:
@@ -79,4 +79,5 @@ jobs:
         shell: powershell
         run: |
           .\.sonar\scanner\dotnet-sonarscanner end `
-            /d:sonar.login="${{ secrets.SONAR_TOKEN }}"
+            /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.coverageReportPaths="${{ env.COVERAGE_FILE }}"
