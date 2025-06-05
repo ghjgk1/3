@@ -56,7 +56,7 @@ jobs:
             /k:"ghjgk1_3" `
             /o:"ghjgk1" `
             /d:sonar.login="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io"  
+            /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.coverageReportPaths="TestResults/**/*.xml"
 
       - name: Build solution
