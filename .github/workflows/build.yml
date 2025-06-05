@@ -63,9 +63,11 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          dotnet test --collect:"XPlat Code Coverage" 
-          --filter "TestCategory!=Integration" 
-          --results-directory ./TestResults
+          dotnet test --filter "TestCategory!=Integration" --collect:"XPlat Code Coverage" --results-directory ./TestResults
+
+      - name: Check for coverage file
+        run: |
+          ls TestResults/**/*.xml
 
       - name: End SonarQube analysis
         env:
