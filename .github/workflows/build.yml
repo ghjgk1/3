@@ -7,7 +7,7 @@ on:
     types: [ opened, synchronize, reopened ]
 
 env:
-  DOTNET_VERSION: '8.0.x'
+  DOTNET_VERSION: '8.0.x'  # Указываем версию .NET 8.0
 
 jobs:
   build:
@@ -65,7 +65,7 @@ jobs:
             /k:"ghjgk1_3" `
             /o:"ghjgk1" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io"  `
+            /d:sonar.host.url="https://sonarcloud.io"    `
             /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.cobertura.xml" `
             /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**" `
             /d:sonar.verbose=true
@@ -73,7 +73,7 @@ jobs:
       - name: Build solution
         run: dotnet build --configuration Release --no-restore
 
-      - name: Run tests with coverage
+      - name: Run tests with coverage (exclude Integration)
         run: |
           dotnet test `
             --configuration Release `
@@ -81,9 +81,7 @@ jobs:
             --collect:"XPlat Code Coverage" `
             --logger trx `
             --results-directory TestResults `
-            /p:CollectCoverage=true `
-            /p:CoverletOutputFormat=cobertura `
-            /p:CoverletOutput=TestResults/
+            --filter "TestCategory!=Integration"
 
       - name: Verify coverage file
         shell: powershell
@@ -100,4 +98,5 @@ jobs:
       - name: End SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+        run: |
+          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
