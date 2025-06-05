@@ -41,8 +41,6 @@ jobs:
           dotnet test `
             --configuration Release `
             --collect:"XPlat Code Coverage" `
-            --settings coverlet.runsettings `
-            --logger trx `
             --results-directory TestResults
 
       - name: Begin SonarQube analysis
