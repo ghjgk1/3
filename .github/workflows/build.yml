@@ -3,9 +3,13 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - master
+    paths-ignore:
+      - "vscode/**"
   pull_request:
     types: [opened, synchronize, reopened]
+    paths:
+      - "!vscode/**"
 
 permissions:
   contents: read
