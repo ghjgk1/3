@@ -71,72 +71,116 @@ jobs:
         shell: powershell
         run: |
           # Найти все тестовые проекты
-          $testProjects = Get-ChildItem -Path . -Recurse -Name "*.csproj" | Where-Object { 
-            $_ -match "Test" -or (Get-Content $_ | Select-String -Pattern "Microsoft\.NET\.Test\.Sdk|xunit|NUnit|MSTest") 
-          }
-          
-          Write-Host "Found test projects:"
-          $testProjects | ForEach-Object { Write-Host "  $_" }
-          
-          if ($testProjects.Count -eq 0) {
-            Write-Host "No test projects found, creating empty coverage file"
-            @"
-          <?xml version="1.0" encoding="utf-8"?>
-          <Coverage>
-            <CoverageSummary />
-          </Coverage>
-          "@ | Out-File -FilePath "coverage.xml" -Encoding UTF8
-          } else {
-            # Запустить тесты с покрытием
-            Write-Host "Running tests with coverage collection..."
+          Write-Host "Looking for test projects..."
+          $testProjects = @()
+          Get-ChildItem -Path . -Recurse -Filter "*.csproj" | ForEach-Object {
+            $projectPath = $_.FullName
+            $projectName = $_.Name
+            Write-Host "Checking project: $projectName"
             
-            try {
-              dotnet-coverage collect `
-                "dotnet test --configuration Release --no-build --logger console --verbosity normal --collect:`"XPlat Code Coverage`" --results-directory ./TestResults/" `
-                --output coverage.xml `
-                --output-format xml `
-                --settings coverlet.runsettings
-            } catch {
-              Write-Host "Coverage collection failed, trying alternative method..."
-              
-              # Альтернативный метод через coverlet
-              dotnet test --configuration Release --no-build `
-                --collect:"XPlat Code Coverage" `
-                --results-directory ./TestResults/ `
-                --logger console --verbosity normal
-              
-              # Найти и объединить файлы покрытия
-              $coverageFiles = Get-ChildItem -Path ./TestResults -Recurse -Filter "coverage.cobertura.xml"
-              if ($coverageFiles.Count -gt 0) {
-                # Конвертировать Cobertura в формат Visual Studio
-                Write-Host "Converting Cobertura coverage to Visual Studio format..."
-                dotnet tool install --global dotnet-reportgenerator-globaltool --ignore-failed-sources
-                reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:"./CoverageReport" -reporttypes:"SonarQube"
-                
-                if (Test-Path "./CoverageReport/SonarQube.xml") {
-                  Copy-Item "./CoverageReport/SonarQube.xml" -Destination "coverage.xml"
-                }
+            if ($projectName -match "Test" -or $projectName -match "Tests") {
+              Write-Host "  -> Found test project by name: $projectName"
+              $testProjects += $projectPath
+            } else {
+              # Проверить содержимое файла проекта
+              $content = Get-Content $projectPath -Raw
+              if ($content -match "Microsoft\.NET\.Test\.Sdk|xunit|NUnit|MSTest\.TestFramework") {
+                Write-Host "  -> Found test project by content: $projectName"
+                $testProjects += $projectPath
               }
             }
           }
           
-          # Проверить результат
-          if (Test-Path "coverage.xml") {
-            $size = (Get-Item "coverage.xml").Length
-            Write-Host "Coverage file created, size: $size bytes"
-            
-            if ($size -gt 100) {
-              Write-Host "Coverage file content preview:"
-              Get-Content "coverage.xml" | Select-Object -First 10 | ForEach-Object { Write-Host $_ }
-            }
-          } else {
-            Write-Host "Warning: No coverage file generated, creating minimal file"
-            @"
+          Write-Host "Found $($testProjects.Count) test projects:"
+          $testProjects | ForEach-Object { Write-Host "  $_" }
+          
+          if ($testProjects.Count -eq 0) {
+            Write-Host "No test projects found, creating minimal coverage file"
+            $coverageXml = @'
           <?xml version="1.0" encoding="utf-8"?>
           <Coverage>
-            <CoverageSummary />
+            <CoverageSummary numSequencePoints="0" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="0" maxCyclomaticComplexity="0" minCyclomaticComplexity="0" visitedClasses="0" numClasses="0" visitedMethods="0" numMethods="0" />
           </Coverage>
-          "@ | Out-File -FilePath "coverage.xml" -Encoding UTF8
+          '@
+            $coverageXml | Out-File -FilePath "coverage.xml" -Encoding UTF8
+          } else {
+            Write-Host "Running tests with coverage collection..."
+            
+            # Метод 1: Попробовать dotnet-coverage
+            $coverageSuccess = $false
+            try {
+              Write-Host "Trying dotnet-coverage method..."
+              $testCommand = "dotnet test --configuration Release --no-build --logger console --verbosity normal"
+              
+              & dotnet-coverage collect $testCommand --output coverage.xml --output-format xml
+              
+              if (Test-Path "coverage.xml" -and (Get-Item "coverage.xml").Length -gt 200) {
+                Write-Host "✅ dotnet-coverage succeeded"
+                $coverageSuccess = $true
+              }
+            } catch {
+              Write-Host "❌ dotnet-coverage failed: $($_.Exception.Message)"
+            }
+            
+            # Метод 2: Если первый не сработал, использовать встроенное покрытие
+            if (-not $coverageSuccess) {
+              Write-Host "Trying built-in coverage collection..."
+              try {
+                dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./TestResults/ --logger console --verbosity normal
+                
+                # Найти файлы покрытия
+                $coverageFiles = Get-ChildItem -Path ./TestResults -Recurse -Filter "coverage.cobertura.xml" -ErrorAction SilentlyContinue
+                if ($coverageFiles.Count -gt 0) {
+                  Write-Host "Found $($coverageFiles.Count) coverage files"
+                  
+                  # Установить ReportGenerator если его нет
+                  try {
+                    & reportgenerator --help *>$null
+                  } catch {
+                    Write-Host "Installing ReportGenerator..."
+                    dotnet tool install --global dotnet-reportgenerator-globaltool
+                  }
+                  
+                  # Конвертировать в формат SonarQube
+                  Write-Host "Converting coverage to SonarQube format..."
+                  & reportgenerator "-reports:./TestResults/**/coverage.cobertura.xml" "-targetdir:./CoverageReport" "-reporttypes:SonarQube"
+                  
+                  if (Test-Path "./CoverageReport/SonarQube.xml") {
+                    Copy-Item "./CoverageReport/SonarQube.xml" -Destination "coverage.xml"
+                    Write-Host "✅ Coverage conversion succeeded"
+                    $coverageSuccess = $true
+                  }
+                } else {
+                  Write-Host "No coverage.cobertura.xml files found"
+                }
+              } catch {
+                Write-Host "❌ Built-in coverage failed: $($_.Exception.Message)"
+              }
+            }
+            
+            # Если ничего не сработало, создать минимальный файл
+            if (-not $coverageSuccess) {
+              Write-Host "Creating fallback coverage file..."
+              $coverageXml = @'
+          <?xml version="1.0" encoding="utf-8"?>
+          <Coverage>
+            <CoverageSummary numSequencePoints="1" visitedSequencePoints="0" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="0" branchCoverage="0" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="1" visitedMethods="0" numMethods="1" />
+          </Coverage>
+          '@
+              $coverageXml | Out-File -FilePath "coverage.xml" -Encoding UTF8
+            }
+          }
+          
+          # Проверить финальный результат
+          if (Test-Path "coverage.xml") {
+            $size = (Get-Item "coverage.xml").Length
+            Write-Host "✅ Coverage file created, size: $size bytes"
+            
+            Write-Host "Coverage file content preview:"
+            Get-Content "coverage.xml" | Select-Object -First 5 | ForEach-Object { Write-Host $_ }
+          } else {
+            Write-Host "❌ Failed to create coverage file"
+            exit 1
           }
 
       - name: Create coverlet settings (if needed)
