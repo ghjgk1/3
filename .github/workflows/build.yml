@@ -25,25 +25,7 @@ jobs:
       - name: Install tools
         run: |
           dotnet tool install --global dotnet-sonarscanner
-          dotnet tool install --global coverlet.console
-
-      - name: Create correct coverlet config
-        shell: bash
-        run: |
-          cat > coverlet.runsettings <<EOF
-          <?xml version="1.0" encoding="utf-8"?>
-          <RunSettings>
-            <DataCollectionRunSettings>
-              <DataCollectors>
-                <DataCollector friendlyName="XPlat code coverage">
-                  <Configuration>
-                    <Format>cobertura</Format>
-                  </Configuration>
-                </DataCollector>
-              </DataCollectors>
-            </DataCollectionRunSettings>
-          </RunSettings>
-          EOF
+          dotnet tool install --global dotnet-coverage
 
       - name: Restore dependencies
         run: dotnet restore
@@ -56,30 +38,22 @@ jobs:
             /k:"ghjgk1_3" `
             /o:"ghjgk1" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-            /d:sonar.host.url="https://sonarcloud.io"    `
-            /d:sonar.cs.opencover.reportsPaths="**/TestResults/**/coverage.cobertura.xml" `
+            /d:sonar.host.url="https://sonarcloud.io" `
+            /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" `
             /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**"
 
       - name: Build solution
-        run: dotnet build --configuration Release --no-restore
+        run: dotnet build --configuration Release --no-incremental --no-restore
 
-      - name: Run tests with coverage (exclude Integration)
+      - name: Run tests with coverage
         run: |
-          dotnet test `
-            --configuration Release `
-            --settings coverlet.runsettings `
-            --collect:"XPlat Code Coverage" `
-            --logger trx `
-            --results-directory TestResults `
-            --filter "TestCategory!=Integration"
+          dotnet-coverage collect "dotnet test --configuration Release --no-build --filter 'TestCategory!=Integration'" -f xml -o "coverage.xml"
 
       - name: Verify coverage file
         shell: powershell
         run: |
-          $coverageFile = Get-ChildItem -Path TestResults -Recurse -Filter "coverage.cobertura.xml" | Select-Object -First 1
-          if ($coverageFile) {
-            Write-Host "Coverage file found at: $($coverageFile.FullName)"
-            echo "COVERAGE_FILE=$($coverageFile.FullName)" >> $env:GITHUB_ENV
+          if (Test-Path "coverage.xml") {
+            Write-Host "Coverage file found: coverage.xml"
           } else {
             Write-Host "##[error] No coverage file found!"
             exit 1
