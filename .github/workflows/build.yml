@@ -4,6 +4,7 @@ on:
     branches: [ master, main ]
   pull_request:
     types: [ opened, synchronize, reopened ]
+
 jobs:
   build:
     name: Build and analyze
@@ -20,13 +21,6 @@ jobs:
         with:
           dotnet-version: '8.0.x'
           
-      - name: Cache SonarQube packages
-        uses: actions/cache@v4
-        with:
-          path: ~\sonar\cache
-          key: ${{ runner.os }}-sonar
-          restore-keys: ${{ runner.os }}-sonar
-          
       - name: Cache SonarQube scanner
         id: cache-sonar-scanner
         uses: actions/cache@v4
@@ -41,11 +35,6 @@ jobs:
         run: |
           New-Item -Path .\.sonar\scanner -ItemType Directory -Force
           dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-          
-      - name: Install dotnet tools
-        run: |
-          dotnet tool install --global dotnet-coverage
-          dotnet tool install --global dotnet-reportgenerator-globaltool
           
       - name: Restore dependencies
         run: dotnet restore
@@ -62,257 +51,27 @@ jobs:
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
             /d:sonar.host.url="https://sonarcloud.io" `
             /d:sonar.cs.opencover.reportsPaths="**/coverage.opencover.xml" `
-            /d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx" `
-            /d:sonar.coverage.exclusions="**/*Test*.cs,**/Test*/**,**/Tests/**,**/Migrations/**,**/*Migration*.cs" `
-            /d:sonar.exclusions="**/bin/**,**/obj/**" `
-            /d:sonar.verbose=true
+            /d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx"
             
       - name: Build solution
         run: dotnet build --configuration Release --no-restore
         
-      - name: Run tests and collect coverage
+      - name: Run tests with coverage
+        run: |
+          dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory TestResults --logger "trx;LogFileName=testresults.trx"
+          
+      - name: Move coverage files
         shell: powershell
         run: |
-          # Find all test projects
-          Write-Host "Looking for test projects..."
-          $testProjects = @()
-          Get-ChildItem -Path . -Recurse -Filter "*.csproj" | ForEach-Object {
-            $projectPath = $_.FullName
-            $projectName = $_.Name
-            Write-Host "Checking project: $projectName"
-            
-            if ($projectName -match "Test|Tests") {
-              Write-Host "  -> Found test project by name: $projectName"
-              $testProjects += $projectPath
-            } else {
-              # Check project file content
-              $content = Get-Content $projectPath -Raw
-              if ($content -match "Microsoft\.NET\.Test\.Sdk|xunit|NUnit|MSTest\.TestFramework|IsTestProject.*true") {
-                Write-Host "  -> Found test project by content: $projectName"
-                $testProjects += $projectPath
-              }
-            }
-          }
-          
-          Write-Host "Found $($testProjects.Count) test projects:"
-          $testProjects | ForEach-Object { Write-Host "  $_" }
-          
-          if ($testProjects.Count -eq 0) {
-            Write-Host "No test projects found, creating minimal coverage file"
-            $coverageXml = @'
-          <?xml version="1.0" encoding="utf-8"?>
-          <coverage version="1">
-            <file path="dummy.cs">
-              <lineToCover lineNumber="1" covered="false" />
-            </file>
-          </coverage>
-          '@
-            $coverageXml | Out-File -FilePath "coverage.xml" -Encoding UTF8
+          # Найти и скопировать файлы покрытия
+          $coverageFiles = Get-ChildItem -Path TestResults -Recurse -Filter "coverage.opencover.xml" -ErrorAction SilentlyContinue
+          if ($coverageFiles.Count -gt 0) {
+            Copy-Item $coverageFiles[0].FullName -Destination "coverage.opencover.xml"
+            Write-Host "Coverage file found and copied"
           } else {
-            Write-Host "Running tests with coverage collection..."
-            
-            # Create runsettings for coverage collection
-            $runSettings = @'
-          <?xml version="1.0" encoding="utf-8" ?>
-          <RunSettings>
-            <DataCollectionRunSettings>
-              <DataCollectors>
-                <DataCollector friendlyName="XPlat code coverage">
-                  <Configuration>
-                    <Format>opencover</Format>
-                    <Exclude>[*Test*]*,[*.Tests]*,[*]*Migration*</Exclude>
-                    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
-                    <ExcludeByFile>**/Migrations/**</ExcludeByFile>
-                  </Configuration>
-                </DataCollector>
-              </DataCollectors>
-            </DataCollectionRunSettings>
-          </RunSettings>
-          '@
-            $runSettings | Out-File -FilePath "test.runsettings" -Encoding UTF8
-            
-            # Try different methods for coverage collection
-            $coverageSuccess = $false
-            
-            # Method 1: Generate OpenCover format for SonarCloud
-            try {
-              Write-Host "Trying OpenCover format collection..."
-              
-              # Use OpenCover format which is preferred by SonarCloud
-              dotnet test --configuration Release --no-build --collect "XPlat Code Coverage" --results-directory ./TestResults/ --settings test.runsettings --logger "trx;LogFileName=testresults.trx"
-              
-              # Find coverage files and copy them with proper naming
-              $coverageFiles = Get-ChildItem -Path ./TestResults -Recurse -Filter "coverage.opencover.xml" -ErrorAction SilentlyContinue
-              if ($coverageFiles.Count -gt 0) {
-                Write-Host "Found $($coverageFiles.Count) OpenCover files"
-                
-                # Copy the first coverage file to root with expected name
-                Copy-Item $coverageFiles[0].FullName -Destination "coverage.opencover.xml"
-                Write-Host "✅ OpenCover format succeeded"
-                $coverageSuccess = $true
-              } else {
-                # Look for cobertura files and convert them
-                $coberturaFiles = Get-ChildItem -Path ./TestResults -Recurse -Filter "coverage.cobertura.xml" -ErrorAction SilentlyContinue
-                if ($coberturaFiles.Count -gt 0) {
-                  Write-Host "Found Cobertura files, converting to OpenCover..."
-                  
-                  # Use reportgenerator to convert to OpenCover
-                  reportgenerator "-reports:./TestResults/**/coverage.cobertura.xml" "-targetdir:./CoverageReport" "-reporttypes:OpenCover"
-                  
-                  if (Test-Path "./CoverageReport/coverage.xml") {
-                    Copy-Item "./CoverageReport/coverage.xml" -Destination "coverage.opencover.xml"
-                    Write-Host "✅ Cobertura to OpenCover conversion succeeded"
-                    $coverageSuccess = $true
-                  }
-                }
-              }
-            } catch {
-              Write-Host "❌ OpenCover collection failed: $($_.Exception.Message)"
-            }
-            
-            # Method 2: Use coverlet directly for better control
-            if (-not $coverageSuccess) {
-              try {
-                Write-Host "Trying coverlet with OpenCover output..."
-                
-                # Install coverlet if not already available
-                dotnet tool install --global coverlet.console --version 6.0.0
-                
-                # Find test assemblies
-                $testDlls = Get-ChildItem -Path . -Recurse -Filter "*Tests*.dll" | Where-Object { $_.FullName -like "*bin*Release*" -and $_.FullName -notlike "*ref*" }
-                
-                if ($testDlls.Count -gt 0) {
-                  $testDll = $testDlls[0].FullName
-                  Write-Host "Using test assembly: $testDll"
-                  
-                  # Run coverlet to generate OpenCover format
-                  coverlet $testDll --target "dotnet" --targetargs "test --no-build --configuration Release" --format opencover --output "coverage.opencover.xml"
-                  
-                  if (Test-Path "coverage.opencover.xml" -and (Get-Item "coverage.opencover.xml").Length -gt 500) {
-                    Write-Host "✅ Coverlet OpenCover succeeded"
-                    $coverageSuccess = $true
-                  }
-                }
-              } catch {
-                Write-Host "❌ Coverlet method failed: $($_.Exception.Message)"
-              }
-            }
-            
-            # Method 3: Simple test run with OpenCover collection (fallback)
-            if (-not $coverageSuccess) {
-              try {
-                Write-Host "Trying simple test run with coverage..."
-                
-                # Simple approach - just run tests and collect any coverage
-                dotnet test --configuration Release --no-build --collect "XPlat Code Coverage" --results-directory ./TestResults/ --logger "trx;LogFileName=testresults.trx"
-                
-                # Try to find any coverage file
-                $allCoverageFiles = Get-ChildItem -Path ./TestResults -Recurse -Filter "coverage.*" -ErrorAction SilentlyContinue
-                if ($allCoverageFiles.Count -gt 0) {
-                  Write-Host "Found $($allCoverageFiles.Count) coverage files:"
-                  $allCoverageFiles | ForEach-Object { Write-Host "  $($_.Name) - $($_.Length) bytes" }
-                  
-                  # Look for OpenCover first, then Cobertura
-                  $openCoverFile = $allCoverageFiles | Where-Object { $_.Name -eq "coverage.opencover.xml" } | Select-Object -First 1
-                  if ($openCoverFile) {
-                    Copy-Item $openCoverFile.FullName -Destination "coverage.opencover.xml"
-                    Write-Host "✅ Found OpenCover file"
-                    $coverageSuccess = $true
-                  } else {
-                    $coberturaFile = $allCoverageFiles | Where-Object { $_.Name -eq "coverage.cobertura.xml" } | Select-Object -First 1
-                    if ($coberturaFile) {
-                      # Convert Cobertura to OpenCover
-                      reportgenerator "-reports:$($coberturaFile.FullName)" "-targetdir:./CoverageReport" "-reporttypes:OpenCover"
-                      if (Test-Path "./CoverageReport/coverage.xml") {
-                        Copy-Item "./CoverageReport/coverage.xml" -Destination "coverage.opencover.xml"
-                        Write-Host "✅ Converted Cobertura to OpenCover"
-                        $coverageSuccess = $true
-                      }
-                    }
-                  }
-                }
-              } catch {
-                Write-Host "❌ Simple coverage collection failed: $($_.Exception.Message)"
-              }
-            }
-            
-            # Method 4: Create a valid OpenCover XML (final fallback)
-            if (-not $coverageSuccess) {
-              Write-Host "Creating fallback OpenCover XML file..."
-              $fallbackOpenCover = @'
-          <?xml version="1.0" encoding="utf-8"?>
-          <CoverageSession xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-            <Summary numSequencePoints="10" visitedSequencePoints="8" numBranchPoints="4" visitedBranchPoints="3" sequenceCoverage="80" branchCoverage="75" maxCyclomaticComplexity="3" minCyclomaticComplexity="1" visitedClasses="2" numClasses="3" visitedMethods="5" numMethods="7" />
-            <Modules>
-              <Module hash="ABC123">
-                <ModulePath>Application.dll</ModulePath>
-                <ModuleTime>2024-01-01T00:00:00</ModuleTime>
-                <ModuleName>Application</ModuleName>
-                <Files>
-                  <File uid="1" fullPath="Application\SyncService.cs" />
-                  <File uid="2" fullPath="Domain\User.cs" />
-                  <File uid="3" fullPath="Infrastructure\Workers\SyncWorker.cs" />
-                </Files>
-                <Classes>
-                  <Class>
-                    <Summary numSequencePoints="5" visitedSequencePoints="4" numBranchPoints="2" visitedBranchPoints="2" sequenceCoverage="80" branchCoverage="100" maxCyclomaticComplexity="2" minCyclomaticComplexity="1" visitedClasses="1" numClasses="1" visitedMethods="2" numMethods="3" />
-                    <FullName>Application.SyncService</FullName>
-                    <Methods>
-                      <Method visited="true" cyclomaticComplexity="1" nPathComplexity="1" sequenceCoverage="100" branchCoverage="100" isConstructor="false" isGetter="false" isSetter="false" isStatic="false">
-                        <Summary numSequencePoints="3" visitedSequencePoints="3" numBranchPoints="0" visitedBranchPoints="0" sequenceCoverage="100" branchCoverage="100" maxCyclomaticComplexity="1" minCyclomaticComplexity="1" visitedClasses="0" numClasses="0" visitedMethods="1" numMethods="1" />
-                        <MetadataToken>100663297</MetadataToken>
-                        <Name>SyncUsers</Name>
-                        <FileRef uid="1" />
-                        <SequencePoints>
-                          <SequencePoint vc="1" uspid="1" ordinal="0" offset="0" sl="25" sc="9" el="25" ec="10" bec="0" bev="0" fileid="1" />
-                          <SequencePoint vc="1" uspid="2" ordinal="1" offset="7" sl="26" sc="13" el="26" ec="45" bec="0" bev="0" fileid="1" />
-                          <SequencePoint vc="1" uspid="3" ordinal="2" offset="21" sl="27" sc="9" el="27" ec="10" bec="0" bev="0" fileid="1" />
-                        </SequencePoints>
-                        <BranchPoints />
-                        <MethodPoint xsi:type="SequencePoint" vc="1" uspid="1" ordinal="0" offset="0" sl="25" sc="9" el="25" ec="10" bec="0" bev="0" fileid="1" />
-                      </Method>
-                    </Methods>
-                  </Class>
-                </Classes>
-              </Module>
-            </Modules>
-          </CoverageSession>
-          '@
-              $fallbackOpenCover | Out-File -FilePath "coverage.opencover.xml" -Encoding UTF8
-              Write-Host "✅ Fallback OpenCover XML created"
-            }
+            Write-Host "No OpenCover files found"
           }
           
-          # Verify final result
-          if (Test-Path "coverage.opencover.xml") {
-            $size = (Get-Item "coverage.opencover.xml").Length
-            Write-Host "✅ Coverage file created: coverage.opencover.xml, size: $size bytes"
-            
-            Write-Host "Coverage file content preview:"
-            Get-Content "coverage.opencover.xml" | Select-Object -First 15 | ForEach-Object { Write-Host $_ }
-          } else {
-            Write-Host "❌ Failed to create coverage file"
-            # Don't exit with error code, let the workflow continue
-            Write-Host "Continuing workflow without coverage data"
-          }
-          
-          # Also check for test result files
-          $trxFiles = Get-ChildItem -Path ./TestResults -Recurse -Filter "*.trx" -ErrorAction SilentlyContinue
-          if ($trxFiles.Count -gt 0) {
-            Write-Host "✅ Found $($trxFiles.Count) test result files"
-          }
-          
-      - name: Upload coverage reports
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage-reports
-          path: |
-            coverage.opencover.xml
-            TestResults/
-            CoverageReport/
-            test.runsettings
-            
       - name: End SonarQube analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
