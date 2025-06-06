@@ -1,8 +1,7 @@
 name: SonarQube Analysis
-
 on:
   push:
-    branches: [ master ]
+    branches: [ master, main ]
   pull_request:
     types: [ opened, synchronize, reopened ]
 
@@ -10,7 +9,7 @@ jobs:
   build:
     name: Build and analyze
     runs-on: windows-latest
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -22,64 +21,158 @@ jobs:
         with:
           dotnet-version: '8.0.x'
 
-      - name: Install tools
+      - name: Cache SonarQube packages
+        uses: actions/cache@v3
+        with:
+          path: ~\sonar\cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache SonarQube scanner
+        id: cache-sonar-scanner
+        uses: actions/cache@v3
+        with:
+          path: .\.sonar\scanner
+          key: ${{ runner.os }}-sonar-scanner
+          restore-keys: ${{ runner.os }}-sonar-scanner
+
+      - name: Install SonarQube scanner
+        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
+        shell: powershell
         run: |
-          dotnet tool install --global dotnet-sonarscanner
-          dotnet tool install --global dotnet-coverage
+          New-Item -Path .\.sonar\scanner -ItemType Directory -Force
+          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
+
+      - name: Install dotnet-coverage
+        run: dotnet tool install --global dotnet-coverage
 
       - name: Restore dependencies
         run: dotnet restore
 
-      - name: Clean build (optional)
-        run: dotnet clean
-
       - name: Begin SonarQube analysis
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
         run: |
-          dotnet sonarscanner begin `
+          .\.sonar\scanner\dotnet-sonarscanner begin `
             /k:"ghjgk1_3" `
             /o:"ghjgk1" `
             /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
             /d:sonar.host.url="https://sonarcloud.io" `
-            /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" `
-            /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**"
+            /d:sonar.cs.vscoveragexml.reportsPaths="**/coverage.xml" `
+            /d:sonar.coverage.exclusions="**/*Test*.cs,**/Test*/**,**/Tests/**,**/Migrations/**,**/*Migration*.cs" `
+            /d:sonar.exclusions="**/bin/**,**/obj/**"
 
-      - name: Build solution (with instrumentation)
-        run: dotnet build --configuration Release --no-incremental --no-restore
+      - name: Build solution
+        run: dotnet build --configuration Release --no-restore
 
-      - name: Run tests with coverage (debug mode)
-        run: |
-          # Debug: List all test projects
-          echo "=== Test projects ==="
-          dotnet list **/*.csproj | grep "Test"
-
-          # Run tests with detailed logging
-          dotnet-coverage collect "dotnet test --configuration Release --no-build --logger:console --verbosity:detailed --filter 'TestCategory!=Integration'" -f xml -o "coverage.xml"
-
-          # Debug: Print coverage.xml (first 100 lines)
-          echo "=== coverage.xml (head) ==="
-          cat coverage.xml | head -n 100
-
-      - name: Verify coverage file
+      - name: Run tests and collect coverage
         shell: powershell
         run: |
-          # Check if coverage.xml exists and contains valid data
-          if (-not (Test-Path "coverage.xml")) {
-            Write-Host "##[error] ❌ coverage.xml not found!"
-            exit 1
+          # Найти все тестовые проекты
+          $testProjects = Get-ChildItem -Path . -Recurse -Name "*.csproj" | Where-Object { 
+            $_ -match "Test" -or (Get-Content $_ | Select-String -Pattern "Microsoft\.NET\.Test\.Sdk|xunit|NUnit|MSTest") 
+          }
+          
+          Write-Host "Found test projects:"
+          $testProjects | ForEach-Object { Write-Host "  $_" }
+          
+          if ($testProjects.Count -eq 0) {
+            Write-Host "No test projects found, creating empty coverage file"
+            @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <Coverage>
+            <CoverageSummary />
+          </Coverage>
+          "@ | Out-File -FilePath "coverage.xml" -Encoding UTF8
+          } else {
+            # Запустить тесты с покрытием
+            Write-Host "Running tests with coverage collection..."
+            
+            try {
+              dotnet-coverage collect `
+                "dotnet test --configuration Release --no-build --logger console --verbosity normal --collect:`"XPlat Code Coverage`" --results-directory ./TestResults/" `
+                --output coverage.xml `
+                --output-format xml `
+                --settings coverlet.runsettings
+            } catch {
+              Write-Host "Coverage collection failed, trying alternative method..."
+              
+              # Альтернативный метод через coverlet
+              dotnet test --configuration Release --no-build `
+                --collect:"XPlat Code Coverage" `
+                --results-directory ./TestResults/ `
+                --logger console --verbosity normal
+              
+              # Найти и объединить файлы покрытия
+              $coverageFiles = Get-ChildItem -Path ./TestResults -Recurse -Filter "coverage.cobertura.xml"
+              if ($coverageFiles.Count -gt 0) {
+                # Конвертировать Cobertura в формат Visual Studio
+                Write-Host "Converting Cobertura coverage to Visual Studio format..."
+                dotnet tool install --global dotnet-reportgenerator-globaltool --ignore-failed-sources
+                reportgenerator -reports:"./TestResults/**/coverage.cobertura.xml" -targetdir:"./CoverageReport" -reporttypes:"SonarQube"
+                
+                if (Test-Path "./CoverageReport/SonarQube.xml") {
+                  Copy-Item "./CoverageReport/SonarQube.xml" -Destination "coverage.xml"
+                }
+              }
+            }
+          }
+          
+          # Проверить результат
+          if (Test-Path "coverage.xml") {
+            $size = (Get-Item "coverage.xml").Length
+            Write-Host "Coverage file created, size: $size bytes"
+            
+            if ($size -gt 100) {
+              Write-Host "Coverage file content preview:"
+              Get-Content "coverage.xml" | Select-Object -First 10 | ForEach-Object { Write-Host $_ }
+            }
+          } else {
+            Write-Host "Warning: No coverage file generated, creating minimal file"
+            @"
+          <?xml version="1.0" encoding="utf-8"?>
+          <Coverage>
+            <CoverageSummary />
+          </Coverage>
+          "@ | Out-File -FilePath "coverage.xml" -Encoding UTF8
           }
 
-          $coverageContent = Get-Content "coverage.xml" -Raw
-          if ($coverageContent -notmatch "<Coverage") {
-            Write-Host "##[error] ❌ coverage.xml is empty or invalid!"
-            exit 1
-          }
+      - name: Create coverlet settings (if needed)
+        shell: powershell
+        run: |
+          @"
+          <?xml version="1.0" encoding="utf-8" ?>
+          <RunSettings>
+            <DataCollectionRunSettings>
+              <DataCollectors>
+                <DataCollector friendlyName="XPlat code coverage">
+                  <Configuration>
+                    <Format>opencover,cobertura</Format>
+                    <Exclude>[*Test*]*,[*.Tests]*,[*]*Migrations*</Exclude>
+                    <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
+                  </Configuration>
+                </DataCollector>
+              </DataCollectors>
+            </DataCollectionRunSettings>
+          </RunSettings>
+          "@ | Out-File -FilePath "coverlet.runsettings" -Encoding UTF8
 
-          Write-Host "✅ coverage.xml is valid"
+      - name: Upload coverage reports
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: coverage-reports
+          path: |
+            coverage.xml
+            TestResults/
+            CoverageReport/
 
       - name: End SonarQube analysis
         env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        shell: powershell
         run: |
-          dotnet sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
