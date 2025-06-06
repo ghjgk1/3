@@ -1,107 +1,101 @@
-name: SonarQube Analysis
+name: SonarCloud Analysis
 on:
+  workflow_dispatch:
   push:
-    branches: [ master, main ]
+    branches:
+      - main
+    paths-ignore:
+      - "vscode/**"
   pull_request:
-    types: [ opened, synchronize, reopened ]
+    types: [opened, synchronize, reopened]
+    paths:
+      - "!vscode/**"
+
+permissions:
+  contents: read
+  pull-requests: read
+
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
-  build:
-    name: Build and analyze
-    runs-on: windows-latest
-    
+  checksecret:
+    name: Check if SONAR_TOKEN is set in GitHub Secrets
+    runs-on: ubuntu-latest
+    outputs:
+      is_SONAR_TOKEN_set: ${{ steps.checksecret_job.outputs.is_SONAR_TOKEN_set }}
     steps:
+      - name: Check whether SONAR_TOKEN is set
+        id: checksecret_job
+        run: |
+          echo "is_SONAR_TOKEN_set=${{ env.SONAR_TOKEN != '' }}" >> $GITHUB_OUTPUT
+
+  sonar_analysis:
+    needs: [checksecret]
+    if: needs.checksecret.outputs.is_SONAR_TOKEN_set == 'true'
+    name: Build and Analyze with SonarCloud
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: "adopt"
+          java-version: 17
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.x"
+
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '8.0.x'
-          
-      - name: Cache SonarQube scanner
-        id: cache-sonar-scanner
+
+      - name: Cache SonarCloud packages
         uses: actions/cache@v4
         with:
-          path: .\.sonar\scanner
-          key: ${{ runner.os }}-sonar-scanner
-          restore-keys: ${{ runner.os }}-sonar-scanner
-          
-      - name: Install SonarQube scanner
-        if: steps.cache-sonar-scanner.outputs.cache-hit != 'true'
-        shell: powershell
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Install SonarCloud scanner
+        run: dotnet tool install dotnet-sonarscanner --create-manifest-if-needed
+
+      - name: Begin SonarCloud analysis
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        shell: pwsh
         run: |
-          New-Item -Path .\.sonar\scanner -ItemType Directory -Force
-          dotnet tool update dotnet-sonarscanner --tool-path .\.sonar\scanner
-          
+          dotnet tool run dotnet-sonarscanner begin `
+            /k:"ghjgk1_3" `
+            /o:"ghjgk1" `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
+            /d:sonar.host.url="https://sonarcloud.io"  `
+            /d:sonar.cs.opencover.reportsPaths="test/**/coverage.opencover.xml" `
+            /d:sonar.coverage.exclusions="**/bin/**,**/obj/**"
+
       - name: Restore dependencies
         run: dotnet restore
-        
-      - name: Begin SonarQube analysis
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
-        run: |
-          .\.sonar\scanner\dotnet-sonarscanner begin `
-          /k:"ghjgk1_3" `
-          /o:"ghjgk1" `
-          /d:sonar.token="${{ secrets.SONAR_TOKEN }}" `
-          /d:sonar.host.url="https://sonarcloud.io" `
-          /d:sonar.cs.opencover.reportsPaths="coverage.opencover.xml" `
-          /d:sonar.cs.cobertura.reportsPaths="coverage.cobertura.xml" `
-          /d:sonar.cs.vstest.reportsPaths="**/TestResults/*.trx" `
-          /d:sonar.coverage.exclusions="**/bin/**,**/obj/**"
-            
+
       - name: Build solution
         run: dotnet build --configuration Release --no-restore
-        
-      - name: Run tests with Coverlet
-        continue-on-error: true
-        shell: powershell
+
+      - name: Run tests with coverage
+        shell: pwsh
         run: |
-          # Устанавливаем Coverlet если нужно
-          dotnet add package coverlet.collector --version 3.2.0
-          
-          # Запускаем тесты с генерацией отчётов
-          dotnet test --configuration Release --no-build `
-            --collect:"XPlat Code Coverage" `
-            --results-directory TestResults `
-            --logger "trx;LogFileName=testresults.trx" `
+          dotnet test test/AscDb-to-AD_SynchronizerTests/AscDb-to-AD_SynchronizerTests.csproj `
+            --no-build `
+            --verbosity normal `
             /p:CollectCoverage=true `
-            /p:CoverletOutputFormat=cobertura `
-            /p:CoverletOutput="../coverage.cobertura.xml" `
-            /p:MergeWith="../coverage.cobertura.xml" `
+            /p:CoverletOutputFormat=opencover `
+            /p:CoverletOutput="../coverage.opencover.xml" `
             /p:Exclude="[xunit.*]*%2c[*Tests]*"
-            
-      - name: Verify coverage files
-        shell: powershell
-        run: |
-          Write-Host "=== Coverage file content ==="
-          if (Test-Path "coverage.cobertura.xml") {
-              Get-Content "coverage.cobertura.xml" -Head 20
-              $size = (Get-Item "coverage.cobertura.xml").Length
-              Write-Host "File size: $size bytes"
-          } else {
-              Write-Host "Coverage file not found!"
-              # Создаём минимальный валидный отчёт если файл не найден
-              @"
-              <?xml version="1.0" encoding="utf-8"?>
-              <coverage line-rate="0.8" branch-rate="0.9" version="1.9" timestamp="$(([datetimeoffset]::Now.ToUnixTimeSeconds()))">
-                <sources>
-                  <source>.</source>
-                </sources>
-                <packages/>
-              </coverage>
-              "@ | Out-File "coverage.cobertura.xml" -Encoding utf8
-          }
-          
-      - name: End SonarQube analysis
+
+      - name: End SonarCloud analysis
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        shell: powershell
+        shell: pwsh
         run: |
-          .\.sonar\scanner\dotnet-sonarscanner end /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
+          dotnet tool run dotnet-sonarscanner end `
+            /d:sonar.token="${{ secrets.SONAR_TOKEN }}"
