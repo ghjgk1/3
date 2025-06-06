@@ -30,6 +30,9 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore
 
+      - name: Clean build (optional)
+        run: dotnet clean
+
       - name: Begin SonarQube analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -42,22 +45,38 @@ jobs:
             /d:sonar.cs.vscoveragexml.reportsPaths="coverage.xml" `
             /d:sonar.coverage.exclusions="**Test*.cs,**/Migrations/**"
 
-      - name: Build solution
+      - name: Build solution (with instrumentation)
         run: dotnet build --configuration Release --no-incremental --no-restore
 
-      - name: Run tests with coverage
+      - name: Run tests with coverage (debug mode)
         run: |
-          dotnet-coverage collect "dotnet test --configuration Release --no-build --filter 'TestCategory!=Integration'" -f xml -o "coverage.xml"
+          # Debug: List all test projects
+          echo "=== Test projects ==="
+          dotnet list **/*.csproj | grep "Test"
+
+          # Run tests with detailed logging
+          dotnet-coverage collect "dotnet test --configuration Release --no-build --logger:console --verbosity:detailed --filter 'TestCategory!=Integration'" -f xml -o "coverage.xml"
+
+          # Debug: Print coverage.xml (first 100 lines)
+          echo "=== coverage.xml (head) ==="
+          cat coverage.xml | head -n 100
 
       - name: Verify coverage file
         shell: powershell
         run: |
-          if (Test-Path "coverage.xml") {
-            Write-Host "Coverage file found: coverage.xml"
-          } else {
-            Write-Host "##[error] No coverage file found!"
+          # Check if coverage.xml exists and contains valid data
+          if (-not (Test-Path "coverage.xml")) {
+            Write-Host "##[error] ❌ coverage.xml not found!"
             exit 1
           }
+
+          $coverageContent = Get-Content "coverage.xml" -Raw
+          if ($coverageContent -notmatch "<Coverage") {
+            Write-Host "##[error] ❌ coverage.xml is empty or invalid!"
+            exit 1
+          }
+
+          Write-Host "✅ coverage.xml is valid"
 
       - name: End SonarQube analysis
         env:
