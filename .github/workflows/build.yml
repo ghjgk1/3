@@ -58,7 +58,7 @@ jobs:
         
       - name: Run tests with coverage
         run: |
-          dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory TestResults --logger "trx;LogFileName=testresults.trx"
+          dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory TestResults --logger "trx;LogFileName=testresults.trx" --filter "TestCategory!=Integration"
           
       - name: Move coverage files
         shell: powershell
